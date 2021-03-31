@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">IP-Finder</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="history">History</string>
+    <string name="cautari">Cautari</string>
+    <string name="salvari">Salvari</string>
+    <string name="logout">Logout</string>
+</resources>

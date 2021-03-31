@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "407194223788",
+    "project_id": "ip-finder-567c2",
+    "storage_bucket": "ip-finder-567c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407194223788:android:54103c0dee2f19c2424b09",
+        "android_client_info": {
+          "package_name": "com.catasoft.ip_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407194223788-bu1vash0hqv9j8dr011bdt8f66dk34o2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9LQQc-UBj6zNVzsYka7wjJaDeltwztFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407194223788-bu1vash0hqv9j8dr011bdt8f66dk34o2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
