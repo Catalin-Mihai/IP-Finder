@@ -12,10 +12,12 @@ public class UserAccount {
 
     private String displayName;
     private String photoUrl;
+    private String ip;
 
-    public UserAccount(String displayName, String photoUrl) {
+    public UserAccount(String displayName, String photoUrl, String ip) {
         this.displayName = displayName;
         this.photoUrl = photoUrl;
+        this.ip = ip;
     }
 
     public long getUserId() {
@@ -40,5 +42,13 @@ public class UserAccount {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.catasoft.ip_finder.R;
+import com.catasoft.ip_finder.databinding.HomeFragmentBinding;
+import com.catasoft.ip_finder.databinding.SearchFragmentBinding;
+import com.catasoft.ip_finder.ui.home.HomeViewModel;
 
 public class SearchFragment extends Fragment {
 
@@ -25,7 +28,19 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.search_fragment, container, false);
+        SearchFragmentBinding binding = SearchFragmentBinding.inflate(inflater);
+        binding.setLifecycleOwner(this);
+        mViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        binding.setViewModel(mViewModel);
+
+        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.makeRequest();
+            }
+        });
+
+        return binding.getRoot();
     }
 
     @Override
@@ -33,6 +48,8 @@ public class SearchFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         // TODO: Use the ViewModel
+
+
     }
 
 }

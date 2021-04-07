@@ -68,7 +68,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
 
                 UserAccountDao userDao = instance.userAccountDao();
-                userDao.insert(new UserAccount("Guest","url phot"));
+                userDao.insert(new UserAccount("Guest","url phot", "79.888.888.9"));
             });
         }
     };

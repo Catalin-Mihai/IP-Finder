@@ -4,11 +4,18 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.dao.SearchInfoDao;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.room.AppRoomDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchInfoRepository {
 
@@ -49,6 +56,12 @@ public class SearchInfoRepository {
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
             searchInfoDao.deleteAll(items);
         });
+    }
+
+    public void makeRequest(String query, Callback<SearchInfo> callback){
+        Call<SearchInfo> call = ApiBuilder.getInstance().getSearchInfo(query);
+
+        call.enqueue(callback);
     }
 
     public LiveData<SearchInfo> getLiveSearchInfo(long searchId){ return searchInfoDao.getLiveSearchInfo(searchId); }
