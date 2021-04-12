@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
 apply plugin: 'com.android.application'
@@ -8,7 +9,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
     dataBinding {
         enabled = true
     }
@@ -37,6 +38,13 @@ android {
 
 dependencies {
 
+    //Google maps
+    // GMS
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    // V3
+    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
+
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
 
@@ -48,8 +56,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
     def nav_version = "2.3.4"
 
     // Java language implementation
