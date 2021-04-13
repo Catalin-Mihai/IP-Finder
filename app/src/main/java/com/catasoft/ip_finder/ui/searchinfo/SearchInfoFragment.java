@@ -3,6 +3,10 @@ package com.catasoft.ip_finder.ui.searchinfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -14,11 +18,20 @@ import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.FragmentSearchInfoBinding;
 import com.catasoft.ip_finder.databinding.SearchFragmentBinding;
 import com.catasoft.ip_finder.ui.search.SearchViewModel;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class SearchInfoFragment extends Fragment {
 
     private static final String SEARCH_ITEM = "SEARCH_ITEM";
-    private SearchInfo searchInfo;
+    private final MutableLiveData<SearchInfo> liveSearchInfo = new MutableLiveData<>();
 
     public SearchInfoFragment() {
         // Required empty public constructor
@@ -32,12 +45,56 @@ public class SearchInfoFragment extends Fragment {
         return fragment;
     }
 
+    public void updateValue(SearchInfo searchInfo){
+        liveSearchInfo.setValue(searchInfo);
+        addMarker();
+    }
+
+    private void addMarker(){
+        if(getActivity() != null && liveSearchInfo.getValue() != null){
+            // Get the SupportMapFragment and request notification when the map is ready to be used.
+            FragmentManager fragmentManager = getChildFragmentManager();
+            SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.infoMap);
+
+            if(mapFragment != null){
+                mapFragment.getMapAsync(new OnMapReadyCallback(){
+
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        LatLng position = new LatLng(liveSearchInfo.getValue().getLat(), liveSearchInfo.getValue().getLon());
+
+                        CameraUpdate center = CameraUpdateFactory.newLatLng(position);
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
+
+                        googleMap.moveCamera(center);
+                        googleMap.animateCamera(zoom);
+                        googleMap.addMarker(new MarkerOptions()
+                                        .position(position)
+//                                .title("Marker in Sydney")
+                        );
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            searchInfo = (SearchInfo) getArguments().getSerializable(SEARCH_ITEM);
+            //Initial value
+            liveSearchInfo.setValue((SearchInfo) getArguments().getSerializable(SEARCH_ITEM));
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+//        Fragment childFragment = new SupportMapFragment();
+//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        transaction.add(R.id.infoMap, childFragment).commit();
+        addMarker();
     }
 
     @Override
@@ -45,7 +102,8 @@ public class SearchInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         FragmentSearchInfoBinding binding = FragmentSearchInfoBinding.inflate(inflater);
         binding.setLifecycleOwner(this);
-        binding.setSearchInfo(searchInfo);
+        binding.setSearchInfo(liveSearchInfo);
+
         return binding.getRoot();
     }
 }

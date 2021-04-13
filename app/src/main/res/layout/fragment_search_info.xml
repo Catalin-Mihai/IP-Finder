@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="com.catasoft.ip_finder.data.entities.SearchInfo"/>
         <variable
             name="searchInfo"
-            type="com.catasoft.ip_finder.data.entities.SearchInfo" />
+            type="LiveData&lt;SearchInfo&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +19,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +72,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{searchInfo.query}" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/infoMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,15 +52,17 @@ public class SearchFragment extends Fragment {
         });
 
         if(getActivity() != null){
+            searchInfoFragment = SearchInfoFragment.newInstance(null);
             getActivity().getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.searchItemFragment, SearchInfoFragment.newInstance(null), null)
+                    .add(R.id.searchItemFragment, searchInfoFragment, null)
                     .commit();
         }
 
         mViewModel.liveSearch.observe(getViewLifecycleOwner(), new Observer<SearchInfo>() {
             @Override
             public void onChanged(SearchInfo searchInfo) {
+                searchInfoFragment.updateValue(searchInfo);
             }
         });
 
