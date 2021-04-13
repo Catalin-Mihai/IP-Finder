@@ -12,6 +12,8 @@ import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Calendar;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,5 +62,20 @@ public class SearchViewModel extends AndroidViewModel {
 
     public LiveData<SearchInfo> getLiveSearch() {
         return liveSearch;
+    }
+
+    public void saveSearch(){
+        SearchInfo value = liveSearch.getValue();
+        if(value != null){
+            Calendar cc = Calendar.getInstance();
+            int year = cc.get(Calendar.YEAR);
+            int month = cc.get(Calendar.MONTH);
+            int day = cc.get(Calendar.DAY_OF_MONTH);
+            int hour = cc.get(Calendar.HOUR_OF_DAY);
+            int minute = cc.get(Calendar.MINUTE);
+            int second = cc.get(Calendar.SECOND);
+            value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+            searchInfoRepository.insert(value);
+        }
     }
 }

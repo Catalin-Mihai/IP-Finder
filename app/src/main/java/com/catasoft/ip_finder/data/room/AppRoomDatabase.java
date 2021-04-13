@@ -58,17 +58,17 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                 SearchInfoDao dao = instance.searchInfoDao();
 
                 SearchInfo a = new SearchInfo("Romania","Buc","Bucuresti",
-                        1.52,1.62,"timezone","RCS","192.568");
+                        1.52,1.62,"timezone","RCS","192.568","data 1");
 
                 SearchInfo b = new SearchInfo("Romania","Iasi","Iasi",
-                        1.52,1.62,"timezone","RCS","192.568");
+                        1.52,1.62,"timezone","RCS","192.568","data 2");
 
                 dao.insert(a);
                 dao.insert(b);
 
 
                 UserAccountDao userDao = instance.userAccountDao();
-                userDao.insert(new UserAccount("Guest","url phot", "79.888.888.9"));
+                userDao.insert(new UserAccount("Guest","url photo", "79.888.888.9"));
             });
         }
     };

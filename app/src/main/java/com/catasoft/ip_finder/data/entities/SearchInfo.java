@@ -5,8 +5,10 @@ import androidx.room.PrimaryKey;
 
 import com.catasoft.ip_finder.data.room.RoomConfig;
 
+import java.io.Serializable;
+
 @Entity(tableName = RoomConfig.SEARCHES_TABLE)
-public class SearchInfo {
+public class SearchInfo implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private long searchId;
 
@@ -18,9 +20,10 @@ public class SearchInfo {
     private String timezone;
     private String isp;
     private String query;
+    private String createdAt;
 
     public SearchInfo(String country, String regionName, String city, double lat, double lon,
-                      String timezone, String isp, String query) {
+                      String timezone, String isp, String query, String createdAt) {
         this.country = country;
         this.regionName = regionName;
         this.city = city;
@@ -29,6 +32,7 @@ public class SearchInfo {
         this.timezone = timezone;
         this.isp = isp;
         this.query = query;
+        this.createdAt = createdAt;
     }
 
     public long getSearchId() {
@@ -101,5 +105,13 @@ public class SearchInfo {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

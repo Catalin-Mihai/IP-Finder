@@ -57,65 +57,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etIp" />
 
-        <LinearLayout
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/searchItemFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/btnLove"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSearch" />
+
+        <Button
+            android:id="@+id/btnLove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSearch">
-
-            <TextView
-                android:id="@+id/tvCountry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.country}" />
-
-            <TextView
-                android:id="@+id/tvRegionName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.regionName}" />
-
-            <TextView
-                android:id="@+id/tvCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.city}" />
-
-            <TextView
-                android:id="@+id/tvLat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(viewModel.liveSearch.lat)}" />
-
-            <TextView
-                android:id="@+id/tvLon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(viewModel.liveSearch.lon)}" />
-
-            <TextView
-                android:id="@+id/tvTimezone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.timezone}" />
-
-            <TextView
-                android:id="@+id/tvIsp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.isp}" />
-
-            <TextView
-                android:id="@+id/tvIp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.liveSearch.query}" />
-        </LinearLayout>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
