@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
@@ -63,6 +64,13 @@ public class SearchFragment extends Fragment {
             @Override
             public void onChanged(SearchInfo searchInfo) {
                 searchInfoFragment.updateValue(searchInfo);
+            }
+        });
+
+        mViewModel.getLiveToastMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                Toast.makeText(getContext(),message, Toast.LENGTH_SHORT).show();
             }
         });
 

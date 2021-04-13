@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.catasoft.ip_finder.Utilities;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 
@@ -37,21 +38,37 @@ public class SearchViewModel extends AndroidViewModel {
 
         String ip = liveIp.getValue();
 
-        //TODO: validare IP cu regex rule
+        if(ip == null){
+            liveToastMessage.setValue("Ip-ul este null");
+            return;
+        }
+
+        if(!Utilities.isValid(ip)){
+            liveToastMessage.setValue("Formatul ip-ului nu este corect");
+            return;
+        }
+
+        if(!Utilities.notGoodConnection(getApplication().getApplicationContext())){
+            liveToastMessage.setValue("Nu exista acces la internet");
+            return;
+        }
 
         searchInfoRepository.makeRequest(ip, new Callback<SearchInfo>() {
             @Override
             public void onResponse(@NotNull Call<SearchInfo> call, @NotNull Response<SearchInfo> response) {
                 SearchInfo searchInfo = response.body();
+                if(searchInfo == null || searchInfo.getCity() == null){
+                    liveToastMessage.setValue("Cautarea nu a fost buna");
+                    return;
+                }
+
                 liveSearch.postValue(searchInfo);
-                //TODO: Verifica daca raspunsul e bun (192.168.0.1 nu este ok. Trebuie facut handle cand nu este cu succes)
-                //TODO: Verifica sa ai acces la retea!
-                //TODO: Camp de tip status pentru SearchInfo
+                liveToastMessage.setValue("Cautareaq s-a efectuat cu succes");
             }
 
             @Override
             public void onFailure(@NotNull Call<SearchInfo> call, @NotNull Throwable t) {
-                liveToastMessage.postValue("Eroare la fetch!");
+                liveToastMessage.postValue("Eroare neasteptata la cautare!");
             }
         });
     }
@@ -62,6 +79,10 @@ public class SearchViewModel extends AndroidViewModel {
 
     public LiveData<SearchInfo> getLiveSearch() {
         return liveSearch;
+    }
+
+    public LiveData<String> getLiveToastMessage() {
+        return liveToastMessage;
     }
 
     public void saveSearch(){
@@ -76,6 +97,7 @@ public class SearchViewModel extends AndroidViewModel {
             int second = cc.get(Calendar.SECOND);
             value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
             searchInfoRepository.insert(value);
+            liveToastMessage.postValue("Cautare salvata!");
         }
     }
 }
