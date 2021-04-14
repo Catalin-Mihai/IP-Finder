@@ -41,14 +41,14 @@ public abstract class AppRoomDatabase extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     AppRoomDatabase.class, RoomConfig.DATABASE_NAME)
-                    .addCallback(roomDatabaseCallback)
+                    //.addCallback(roomDatabaseCallback)
                     .build();
         }
 
         return instance;
     }
 
-    private static final RoomDatabase.Callback roomDatabaseCallback = new RoomDatabase.Callback() {
+    /*private static final RoomDatabase.Callback roomDatabaseCallback = new RoomDatabase.Callback() {
 
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -58,14 +58,14 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                 SearchInfoDao dao = instance.searchInfoDao();
 
                 SearchInfo a = new SearchInfo("Romania","Buc","Bucuresti",
-                        1.52,1.62,"timezone","RCS","192.568","data 1","guest");
+                        1.52,1.62,"timezone","RCS","192.568","data 1","guest", firebaseLogin);
 
                 SearchInfo b = new SearchInfo("Romania","Iasi","Iasi",
-                        1.52,1.62,"timezone","RCS","192.568","data 2","guest");
+                        1.52,1.62,"timezone","RCS","192.568","data 2","guest", firebaseLogin);
 
                 dao.insert(a);
                 dao.insert(b);
             });
         }
-    };
+    };*/
 }

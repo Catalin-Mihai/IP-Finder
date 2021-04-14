@@ -31,6 +31,6 @@ public interface SearchInfoDao {
     @Query("SELECT * FROM " + RoomConfig.SEARCHES_TABLE + " WHERE searchId = :searchId")
     LiveData<SearchInfo> getLiveSearchInfo(long searchId);
 
-    @Query("SELECT * FROM " + RoomConfig.SEARCHES_TABLE + " WHERE userId = :userId")
-    LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(String userId);
+    @Query("SELECT * FROM " + RoomConfig.SEARCHES_TABLE + " WHERE userId = :userId AND firebaseLogin = :firebaseLogin")
+    LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(String userId, boolean firebaseLogin);
 }

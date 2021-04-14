@@ -25,6 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static String CURRENT_USER_ID = "";
+    public static boolean LOCAL_LOGIN = false;
     private HistoryViewModel historyViewModel;
 
     @Override
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set current user id
         CURRENT_USER_ID = preferences.getString(AuthActivity.USER_ID_KEY,"");
+        LOCAL_LOGIN = preferences.getBoolean(AuthActivity.LOCAL_LOGGED_IN_ID_KEY,false);
 
         // set data binding
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);

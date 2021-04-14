@@ -22,9 +22,10 @@ public class SearchInfo implements Serializable {
     private String query;
     private String createdAt;
     private String userId;
+    private boolean firebaseLogin;
 
     public SearchInfo(String country, String regionName, String city, double lat, double lon,
-                      String timezone, String isp, String query, String createdAt, String userId) {
+                      String timezone, String isp, String query, String createdAt, String userId, boolean firebaseLogin) {
         this.country = country;
         this.regionName = regionName;
         this.city = city;
@@ -35,6 +36,7 @@ public class SearchInfo implements Serializable {
         this.query = query;
         this.createdAt = createdAt;
         this.userId = userId;
+        this.firebaseLogin = firebaseLogin;
     }
 
     public long getSearchId() {
@@ -123,5 +125,13 @@ public class SearchInfo implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public boolean getFirebaseLogin() {
+        return firebaseLogin;
+    }
+
+    public void setFirebaseLogin(boolean firebaseLogin) {
+        this.firebaseLogin = firebaseLogin;
     }
 }

@@ -103,6 +103,8 @@ public class SearchViewModel extends AndroidViewModel {
 
             value.setUserId(MainActivity.CURRENT_USER_ID);
 
+            value.setFirebaseLogin(!MainActivity.LOCAL_LOGIN);
+
             searchInfoRepository.insert(value);
             liveToastMessage.postValue("Cautare salvata!");
         }
