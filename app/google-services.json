@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "407194223788-actr75tnabu3jfncai12c6dlgq4mf5rg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.catasoft.ip_finder",
+            "certificate_hash": "5e50acb1ecd31267cb9bcbb3e13a321f21c3fa59"
+          }
+        },
+        {
           "client_id": "407194223788-bu1vash0hqv9j8dr011bdt8f66dk34o2.apps.googleusercontent.com",
           "client_type": 3
         }

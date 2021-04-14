@@ -24,13 +24,14 @@ public interface UserAccountDao {
     @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET currentUser = 0 WHERE currentUser = 1")
     void unsetCurrentUser();
 
-    @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET currentUser = 1 WHERE username = :username AND password = :password")
-    void setCurrentUser(String username, String password);
+    @Query("UPDATE " + RoomConfig.USER_INFO_TABLE +
+            " SET currentUser = 1 WHERE username = :username AND password = :password AND firebaseLogin = :firebaseLogin")
+    void setCurrentUser(String username, String password, int firebaseLogin);
 
     @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET ip = :ip WHERE currentUser = 1")
     void updateCurrentUserIp(String ip);
 
     @Query("SELECT EXISTS(SELECT * FROM " + RoomConfig.USER_INFO_TABLE +
-            " WHERE username = :username AND password = :password)")
-    boolean checkLocalUserAccount(String username, String password);
+            " WHERE username = :username AND password = :password AND firebaseLogin = :firebaseLogin)")
+    boolean checkUserAccount(String username, String password, int firebaseLogin);
 }

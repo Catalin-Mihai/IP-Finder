@@ -15,13 +15,15 @@ public class UserAccount {
     private String photoUrl;
     private String ip;
     private int currentUser;
+    private int firebaseLogin;
 
-    public UserAccount(String username, String password, String photoUrl, String ip, int currentUser) {
+    public UserAccount(String username, String password, String photoUrl, String ip, int currentUser, int firebaseLogin) {
         this.username = username;
         this.password = password;
         this.photoUrl = photoUrl;
         this.ip = ip;
         this.currentUser = currentUser;
+        this.firebaseLogin = firebaseLogin;
     }
 
     public long getUserId() {
@@ -70,5 +72,13 @@ public class UserAccount {
 
     public void setCurrentUser(int currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public int getFirebaseLogin() {
+        return firebaseLogin;
+    }
+
+    public void setFirebaseLogin(int firebaseLogin) {
+        this.firebaseLogin = firebaseLogin;
     }
 }

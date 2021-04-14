@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -14,8 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.catasoft.ip_finder.MainActivity;
 import com.catasoft.ip_finder.R;
+import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.databinding.ActivityAuthBinding;
 import com.catasoft.ip_finder.ui.guest.GuestActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -26,6 +35,9 @@ public class AuthActivity extends AppCompatActivity {
     public final static String USER_ID_KEY = "USER_ID_KEY";
 
     private AuthViewModel authViewModel;
+
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,73 @@ public class AuthActivity extends AppCompatActivity {
                 AuthActivity.this.goToGuestActivity();
             }
         });
+
+        binding.btnGoogle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Configure Google Sign In
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                mGoogleSignInClient = GoogleSignIn.getClient(AuthActivity.this, gso);
+                signInWithGoogle();
+            }
+        });
+    }
+
+    private void signInWithGoogle(){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            // Signed in successfully, show authenticated UI.
+            handleRegisterOrLogin(account);
+
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("[google-sign-in]", "signInResult:failed code=" + e.getStatusCode());
+            handleRegisterOrLogin(null);
+        }
+    }
+
+    private void handleRegisterOrLogin(GoogleSignInAccount account){
+        if(account == null){
+            Toast.makeText(this, "Autentificare cu google nu a reusit", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+//        authViewModel.logi
+
+        goToMainActivity(false, account.getDisplayName());
+
+        UserAccount newUserAccount = new UserAccount(account.getDisplayName(),
+                "firebase", null, null, 1, 1);
+        authViewModel.localRegister(newUserAccount, new AuthActivityCallback(){
+
+            @Override
+            public void goToMainActivity(boolean isLocalLogin, String userId) {
+                AuthActivity.this.goToMainActivity(isLocalLogin, userId);
+            }
+        });
     }
 
     private void setViewModel(){
@@ -84,7 +163,7 @@ public class AuthActivity extends AppCompatActivity {
         });
     }
 
-    private void addLocalUserInSharedPreferences(boolean isLocalLogin, String userId) {
+    private void addUserInSharedPreferences(boolean isLocalLogin, String userId) {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(LOGGED_IN_ID_KEY, true);
@@ -105,7 +184,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity(boolean isLocalLogin, String userId){
-        addLocalUserInSharedPreferences(isLocalLogin, userId);
+        addUserInSharedPreferences(isLocalLogin, userId);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

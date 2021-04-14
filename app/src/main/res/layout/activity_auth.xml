@@ -14,12 +14,10 @@
         android:layout_height="match_parent"
         tools:context=".ui.auth.AuthActivity">
 
-        <Button
+        <com.google.android.gms.common.SignInButton
             android:id="@+id/btnGoogle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Login with google"
             app:layout_constraintBottom_toTopOf="@+id/btnGuest"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
