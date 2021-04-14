@@ -8,7 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class ApiBuilder {
 
     private static ApiService apiBuilder;
-    private final static String BASE_URL = "http://ip-api.com/json/";
+    private final static String BASE_URL = "http://ip-api.com/";
 
     public static ApiService getInstance(){
         if(apiBuilder == null){

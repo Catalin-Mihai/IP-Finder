@@ -61,7 +61,11 @@ public class SearchInfoRepository {
 
     public void makeRequest(String query, Callback<SearchInfo> callback){
         Call<SearchInfo> call = ApiBuilder.getInstance().getSearchInfo(query);
+        call.enqueue(callback);
+    }
 
+    public void makeRequest(Callback<SearchInfo> callback){
+        Call<SearchInfo> call = ApiBuilder.getInstance().getCurrentUserInfo();
         call.enqueue(callback);
     }
 

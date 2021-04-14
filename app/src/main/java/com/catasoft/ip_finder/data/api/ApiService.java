@@ -9,8 +9,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ApiService {
-    @GET("{query}")
+    @GET("json/{query}")
     Call<SearchInfo> getSearchInfo(@Path("query") String query);
 
-
+    @GET("json/")
+    Call<SearchInfo> getCurrentUserInfo();
 }

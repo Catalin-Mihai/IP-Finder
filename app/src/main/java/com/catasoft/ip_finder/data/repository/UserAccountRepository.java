@@ -4,10 +4,14 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.dao.UserAccountDao;
+import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.data.room.AppRoomDatabase;
 import com.catasoft.ip_finder.ui.auth.AuthViewModel;
+
+import retrofit2.Call;
 
 public class UserAccountRepository {
 
@@ -74,4 +78,11 @@ public class UserAccountRepository {
     public void logout(){
         AppRoomDatabase.databaseWriteExecutor.execute(userAccountDao::unsetCurrentUser);
     }
+
+    public void updateCurrentUserIp(String ip){
+        AppRoomDatabase.databaseWriteExecutor.execute(() -> {
+            userAccountDao.updateCurrentUserIp(ip);
+        });
+    }
+
 }

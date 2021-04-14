@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="79.118.23.198"
+                    android:text="@{viewModel.liveCurrentUser.ip}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

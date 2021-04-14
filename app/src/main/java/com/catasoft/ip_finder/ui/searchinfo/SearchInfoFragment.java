@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -62,16 +63,14 @@ public class SearchInfoFragment extends Fragment {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         LatLng position = new LatLng(liveSearchInfo.getValue().getLat(), liveSearchInfo.getValue().getLon());
-
-                        CameraUpdate center = CameraUpdateFactory.newLatLng(position);
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
-
-                        googleMap.moveCamera(center);
-                        googleMap.animateCamera(zoom);
-                        googleMap.addMarker(new MarkerOptions()
-                                        .position(position)
-//                                .title("Marker in Sydney")
-                        );
+                        googleMap.addMarker(new MarkerOptions().position(position));
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(position)           // Center Set
+                                .zoom(11.0f)                // Zoom
+                                .bearing(90)                // Orientation of the camera to east
+                                .tilt(30)                   // Tilt of the camera to 30 degrees
+                                .build();                   // Creates a CameraPosition from the builder
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     }
                 });
             }
@@ -90,10 +89,6 @@ public class SearchInfoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-//        Fragment childFragment = new SupportMapFragment();
-//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-//        transaction.add(R.id.infoMap, childFragment).commit();
         addMarker();
     }
 
@@ -103,7 +98,6 @@ public class SearchInfoFragment extends Fragment {
         FragmentSearchInfoBinding binding = FragmentSearchInfoBinding.inflate(inflater);
         binding.setLifecycleOwner(this);
         binding.setSearchInfo(liveSearchInfo);
-
         return binding.getRoot();
     }
 }

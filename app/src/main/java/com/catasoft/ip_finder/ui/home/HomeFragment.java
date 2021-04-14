@@ -11,11 +11,31 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.catasoft.ip_finder.MainActivity;
+import com.catasoft.ip_finder.R;
+import com.catasoft.ip_finder.data.entities.SearchInfo;
+import com.catasoft.ip_finder.databinding.FragmentSearchInfoBinding;
 import com.catasoft.ip_finder.databinding.HomeFragmentBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.jetbrains.annotations.NotNull;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -46,8 +66,16 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        homeViewModel.updateCurrentUserIp();
+
+        homeViewModel.getLiveSearchCurrentUser().observe(getViewLifecycleOwner(), new Observer<SearchInfo>() {
+            @Override
+            public void onChanged(SearchInfo searchInfo) {
+                addMarker(searchInfo);
+            }
+        });
     }
 
     private void resetSharedPreferences() {
@@ -69,6 +97,31 @@ public class HomeFragment extends Fragment {
 
     private void setViewModel(){
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+    }
+
+    private void addMarker(SearchInfo searchInfo){
+        if(getActivity() != null && searchInfo != null){
+            // Get the SupportMapFragment and request notification when the map is ready to be used.
+            FragmentManager fragmentManager = getChildFragmentManager();
+            SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
+
+            if(mapFragment != null){
+                mapFragment.getMapAsync(new OnMapReadyCallback(){
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        LatLng position = new LatLng(searchInfo.getLat(), searchInfo.getLon());
+                        googleMap.addMarker(new MarkerOptions().position(position));
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(position)           // Center Set
+                                .zoom(11.0f)                // Zoom
+                                .bearing(90)                // Orientation of the camera to east
+                                .tilt(30)                   // Tilt of the camera to 30 degrees
+                                .build();                   // Creates a CameraPosition from the builder
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                });
+            }
+        }
     }
 
 }
