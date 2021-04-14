@@ -42,62 +42,38 @@ public class AuthViewModel extends AndroidViewModel {
 
     public LiveData<UserAccount> getLiveCurrentUserAccount(){ return liveCurrentUserAccount; }
 
-    public void localRegister(UserAccount userAccount, AuthActivity.AuthActivityCallback callback){
-        String username = userAccount.getUsername();
-        String password = userAccount.getPassword();
-
-        addUser(username, password, callback, 0);
-    }
-
     public void localRegister(AuthActivity.AuthActivityCallback callback){
         String username = liveLocalUsername.getValue();
         String password = liveLocalPassword.getValue();
-
-        addUser(username, password, callback, 1);
-    }
-
-    private void addUser(String username, String password, AuthActivity.AuthActivityCallback callback, int firebaseLogin){
 
         if(username == null || password == null){
             liveToastMessage.setValue("Username-ul sau parola este null");
             return;
         }
+        userAccountRepository.registerLocalUser(new UserAccount(username,password,"","", 1, 0),
+                new AuthViewModelCallback(){
+                    @Override
+                    public void onSuccess() {
+                        callback.goToMainActivity(true, username);
+                    }
 
-        userAccountRepository.addUser(new UserAccount(username,password,"","", 1, firebaseLogin),
-            new AuthViewModelCallback(){
-                @Override
-                public void onSuccess() {
-                    callback.goToMainActivity(firebaseLogin == 0, username);
-                }
-
-                @Override
-                public void onFailure() {
-                    liveToastMessage.postValue("Inregistrarea nu a putut fi efectuata");
-                }
-            });
-    }
-
-    public void localLogin(UserAccount userAccount, AuthActivity.AuthActivityCallback callback){
-        String username = userAccount.getUsername();
-        String password = userAccount.getPassword();
-
-        login(username, password, callback, 1);
+                    @Override
+                    public void onFailure() {
+                        liveToastMessage.postValue("Inregistrarea nu a putut fi efectuata");
+                    }
+                });
     }
 
     public void localLogin(AuthActivity.AuthActivityCallback callback){
         String username = liveLocalUsername.getValue();
         String password = liveLocalPassword.getValue();
 
-        login(username, password, callback, 0);
-    }
-
-    private void login(String username, String password, AuthActivity.AuthActivityCallback callback, int firebaseLogin){
         if(username == null || password == null){
             liveToastMessage.setValue("Username-ul sau parola este null");
             return;
         }
 
-        userAccountRepository.login(username, password, firebaseLogin, new AuthViewModelCallback(){
+        userAccountRepository.loginLocalUser(username, password, new AuthViewModelCallback(){
             @Override
             public void onSuccess() {
                 callback.goToMainActivity(true, username);
@@ -106,6 +82,28 @@ public class AuthViewModel extends AndroidViewModel {
             @Override
             public void onFailure() {
                 liveToastMessage.postValue("Contul asociat acestor credentiale nu exista");
+            }
+        });
+    }
+
+    public void googleLogin(UserAccount userAccount, AuthActivity.AuthActivityCallback callback){
+        String username = userAccount.getUsername();
+        String password = userAccount.getPassword();
+
+        if(username == null || password == null){
+            liveToastMessage.setValue("Nu a putut fi efectuata logarea cu Google");
+            return;
+        }
+
+        userAccountRepository.googleLogin(userAccount, new AuthViewModelCallback(){
+            @Override
+            public void onSuccess() {
+                callback.goToMainActivity(false, username);
+            }
+
+            @Override
+            public void onFailure() {
+                liveToastMessage.postValue("Nu a putut fi efectuata logarea cu Google");
             }
         });
     }

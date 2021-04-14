@@ -45,13 +45,12 @@ public class UserAccountRepository {
 
     public LiveData<UserAccount> getLiveCurrentUserAccount(){ return liveCurrentUserAccount; }
 
-    public void addUser(UserAccount value, AuthViewModel.AuthViewModelCallback callback){
+    public void registerLocalUser(UserAccount value, AuthViewModel.AuthViewModelCallback callback){
         // make sure that this will be current user of the application
         value.setCurrentUser(1);
 
         // add user
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-
             if (!userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), value.getFirebaseLogin())){
                 if(userAccountDao.insert(value) > 0){
                     callback.onSuccess();
@@ -62,11 +61,32 @@ public class UserAccountRepository {
         });
     }
 
-    public void login(String username, String password, int firebaseLogin, AuthViewModel.AuthViewModelCallback callback){
+    public void loginLocalUser(String username, String password, AuthViewModel.AuthViewModelCallback callback){
         // check if local user exists
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-            if (userAccountDao.checkUserAccount(username, password, firebaseLogin)){
-                userAccountDao.setCurrentUser(username, password, firebaseLogin);
+            if (userAccountDao.checkUserAccount(username, password, 0)){
+                userAccountDao.setCurrentUser(username, password, 0);
+                callback.onSuccess();
+                return;
+            }
+            callback.onFailure();
+        });
+    }
+
+    public void googleLogin(UserAccount value, AuthViewModel.AuthViewModelCallback callback){
+        AppRoomDatabase.databaseWriteExecutor.execute(() -> {
+            // check if room user exists
+            if (userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), 1)){
+                userAccountDao.setCurrentUser(value.getUsername(), value.getPassword(), 1);
+                callback.onSuccess();
+                return;
+            }
+
+            // make sure that this will be current user of the application
+            value.setCurrentUser(1);
+
+            // add user
+            if(userAccountDao.insert(value) > 0){
                 callback.onSuccess();
                 return;
             }

@@ -135,17 +135,14 @@ public class AuthActivity extends AppCompatActivity {
             return;
         }
 
-//        authViewModel.logi
+        // create local account for room and login
+        UserAccount userAccount = new UserAccount(account.getDisplayName(),"firebase",
+                "", "", 1, 1);
 
-        goToMainActivity(false, account.getDisplayName());
-
-        UserAccount newUserAccount = new UserAccount(account.getDisplayName(),
-                "firebase", null, null, 1, 1);
-        authViewModel.localRegister(newUserAccount, new AuthActivityCallback(){
-
+        authViewModel.googleLogin(userAccount, new AuthActivityCallback(){
             @Override
             public void goToMainActivity(boolean isLocalLogin, String userId) {
-                AuthActivity.this.goToMainActivity(isLocalLogin, userId);
+                AuthActivity.this.goToMainActivity(false, userId);
             }
         });
     }
