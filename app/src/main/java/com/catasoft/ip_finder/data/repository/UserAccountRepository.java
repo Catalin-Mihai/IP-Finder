@@ -26,71 +26,76 @@ public class UserAccountRepository {
         liveCurrentUserAccount = userAccountDao.getLiveCurrentUserAccount();
     }
 
-    public void updateCurrentUserAccount(UserAccount value) {
-        UserAccount currentUserAccount = liveCurrentUserAccount.getValue();
-        if(currentUserAccount == null || value == null){
-            return;
-        }
-
-        // update current user
-        currentUserAccount.setUsername(value.getUsername());
-        currentUserAccount.setIp(value.getIp());
-        currentUserAccount.setPhotoUrl(value.getPhotoUrl());
-        currentUserAccount.setCurrentUser(1);
-
-        AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-            userAccountDao.update(currentUserAccount);
-        });
-    }
-
     public LiveData<UserAccount> getLiveCurrentUserAccount(){ return liveCurrentUserAccount; }
 
     public void registerLocalUser(UserAccount value, AuthViewModel.AuthViewModelCallback callback){
-        // make sure that this will be current user of the application
-        value.setCurrentUser(1);
-
-        // add user
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-            if (!userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), value.getFirebaseLogin())){
+            // make sure that this will be current user of the application
+            value.setCurrentUser(1);
+
+            // before register check if user already exists
+            if (!userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), value.isLocalLogin())){
+                // insert user
                 if(userAccountDao.insert(value) > 0){
-                    callback.onSuccess();
+                    UserAccount tmp = userAccountDao.getCurrentUserAccount();
+                    if(tmp == null){
+                        callback.onFailure("Eroare la preluarea userului");
+                        return;
+                    }
+                    callback.onSuccess(tmp.getUserId());
                     return;
                 }
             }
-            callback.onFailure();
+            callback.onFailure("Eroare la inregistrarea userului");
         });
     }
 
     public void loginLocalUser(String username, String password, AuthViewModel.AuthViewModelCallback callback){
         // check if local user exists
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-            if (userAccountDao.checkUserAccount(username, password, 0)){
-                userAccountDao.setCurrentUser(username, password, 0);
-                callback.onSuccess();
+            if (userAccountDao.checkUserAccount(username, password, true)){
+                // refresh current user
+                userAccountDao.setCurrentUser(username, password, true);
+                UserAccount tmp = userAccountDao.getCurrentUserAccount();
+                if(tmp == null){
+                    callback.onFailure("Eroare la preluarea userului");
+                    return;
+                }
+                callback.onSuccess(tmp.getUserId());
                 return;
             }
-            callback.onFailure();
+            callback.onFailure("Username sau parola gresita");
         });
     }
 
     public void googleLogin(UserAccount value, AuthViewModel.AuthViewModelCallback callback){
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
             // check if room user exists
-            if (userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), 1)){
-                userAccountDao.setCurrentUser(value.getUsername(), value.getPassword(), 1);
-                callback.onSuccess();
+            if (userAccountDao.checkUserAccount(value.getUsername(), value.getPassword(), false)){
+                // refresh current user
+                userAccountDao.setCurrentUser(value.getUsername(), value.getPassword(), false);
+                UserAccount tmp = userAccountDao.getCurrentUserAccount();
+                if(tmp == null){
+                    callback.onFailure("Eroare la preluarea userului");
+                    return;
+                }
+                callback.onSuccess(tmp.getUserId());
                 return;
             }
 
+            // if room user does not exists ==> add user
             // make sure that this will be current user of the application
             value.setCurrentUser(1);
-
-            // add user
             if(userAccountDao.insert(value) > 0){
-                callback.onSuccess();
+                UserAccount tmp = userAccountDao.getCurrentUserAccount();
+                if(tmp == null){
+                    callback.onFailure("Eroare la preluarea userului");
+                    return;
+                }
+                callback.onSuccess(tmp.getUserId());
                 return;
             }
-            callback.onFailure();
+            callback.onFailure("Logarea cu Google nu a reusit");
         });
     }
 

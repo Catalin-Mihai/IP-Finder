@@ -15,15 +15,15 @@ public class UserAccount {
     private String photoUrl;
     private String ip;
     private int currentUser;
-    private int firebaseLogin;
+    private boolean localLogin;
 
-    public UserAccount(String username, String password, String photoUrl, String ip, int currentUser, int firebaseLogin) {
+    public UserAccount(String username, String password, String photoUrl, String ip, int currentUser, boolean localLogin) {
         this.username = username;
         this.password = password;
         this.photoUrl = photoUrl;
         this.ip = ip;
         this.currentUser = currentUser;
-        this.firebaseLogin = firebaseLogin;
+        this.localLogin = localLogin;
     }
 
     public long getUserId() {
@@ -74,11 +74,11 @@ public class UserAccount {
         this.currentUser = currentUser;
     }
 
-    public int getFirebaseLogin() {
-        return firebaseLogin;
+    public boolean isLocalLogin() {
+        return localLogin;
     }
 
-    public void setFirebaseLogin(int firebaseLogin) {
-        this.firebaseLogin = firebaseLogin;
+    public void setLocalLogin(boolean localLogin) {
+        this.localLogin = localLogin;
     }
 }

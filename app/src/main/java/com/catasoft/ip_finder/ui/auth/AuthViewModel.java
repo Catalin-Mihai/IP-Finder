@@ -13,8 +13,6 @@ import com.catasoft.ip_finder.data.repository.UserAccountRepository;
 public class AuthViewModel extends AndroidViewModel {
 
     private final UserAccountRepository userAccountRepository;
-    private final LiveData<UserAccount> liveCurrentUserAccount;
-
     // Leave this with no initial value. If you put an initial value it will trigger setValue().
     private final MutableLiveData<String> liveToastMessage = new MutableLiveData<>();
 
@@ -23,24 +21,12 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-
         userAccountRepository = new UserAccountRepository(application);
-
-        // one query is enough because LiveData is made i.e. to be automatically notified by room
-        // when changes are made in db
-        liveCurrentUserAccount = userAccountRepository.getLiveCurrentUserAccount();
     }
 
     public LiveData<String> getLiveToastMessage() { return liveToastMessage; }
-
     public MutableLiveData<String> getLiveLocalUsername() { return liveLocalUsername; }
     public MutableLiveData<String> getLiveLocalPassword() { return liveLocalPassword; }
-
-    public void updateCurrentUserAccount(UserAccount value) {
-        userAccountRepository.updateCurrentUserAccount(value);
-    }
-
-    public LiveData<UserAccount> getLiveCurrentUserAccount(){ return liveCurrentUserAccount; }
 
     public void localRegister(AuthActivity.AuthActivityCallback callback){
         String username = liveLocalUsername.getValue();
@@ -50,16 +36,17 @@ public class AuthViewModel extends AndroidViewModel {
             liveToastMessage.setValue("Username-ul sau parola este null");
             return;
         }
-        userAccountRepository.registerLocalUser(new UserAccount(username,password,"","", 1, 0),
+
+        userAccountRepository.registerLocalUser(new UserAccount(username,password,"","", 1, true),
                 new AuthViewModelCallback(){
                     @Override
-                    public void onSuccess() {
-                        callback.goToMainActivity(true, username);
+                    public void onSuccess(long userId) {
+                        callback.goToMainActivity(true, userId);
                     }
 
                     @Override
-                    public void onFailure() {
-                        liveToastMessage.postValue("Inregistrarea nu a putut fi efectuata");
+                    public void onFailure(String error) {
+                        liveToastMessage.postValue(error);
                     }
                 });
     }
@@ -75,13 +62,13 @@ public class AuthViewModel extends AndroidViewModel {
 
         userAccountRepository.loginLocalUser(username, password, new AuthViewModelCallback(){
             @Override
-            public void onSuccess() {
-                callback.goToMainActivity(true, username);
+            public void onSuccess(long userId) {
+                callback.goToMainActivity(true, userId);
             }
 
             @Override
-            public void onFailure() {
-                liveToastMessage.postValue("Contul asociat acestor credentiale nu exista");
+            public void onFailure(String error) {
+                liveToastMessage.postValue(error);
             }
         });
     }
@@ -97,19 +84,19 @@ public class AuthViewModel extends AndroidViewModel {
 
         userAccountRepository.googleLogin(userAccount, new AuthViewModelCallback(){
             @Override
-            public void onSuccess() {
-                callback.goToMainActivity(false, username);
+            public void onSuccess(long userId) {
+                callback.goToMainActivity(false, userId);
             }
 
             @Override
-            public void onFailure() {
-                liveToastMessage.postValue("Nu a putut fi efectuata logarea cu Google");
+            public void onFailure(String error) {
+                liveToastMessage.postValue(error);
             }
         });
     }
 
     public interface AuthViewModelCallback {
-        void onSuccess();
-        void onFailure();
+        void onSuccess(long userId);
+        void onFailure(String error);
     }
 }

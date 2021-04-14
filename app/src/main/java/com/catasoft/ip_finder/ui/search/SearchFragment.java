@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment {
 
         // set visibility for add button
         SharedPreferences preferences = getActivity().getSharedPreferences(AuthActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
-        searchViewModel.setLiveGuestSession(preferences.getBoolean(AuthActivity.GUEST_SESSION_ID_KEY,false));
+        searchViewModel.setLiveGuestSession(preferences.getBoolean(AuthActivity.GUEST_SESSION,false));
 
         // set view model observers
         searchViewModel.liveSearch.observe(getViewLifecycleOwner(), new Observer<SearchInfo>() {

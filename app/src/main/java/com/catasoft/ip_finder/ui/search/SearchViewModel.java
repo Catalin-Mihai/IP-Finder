@@ -98,12 +98,10 @@ public class SearchViewModel extends AndroidViewModel {
             int hour = cc.get(Calendar.HOUR_OF_DAY);
             int minute = cc.get(Calendar.MINUTE);
             int second = cc.get(Calendar.SECOND);
-
             value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
 
+            // link search with current user
             value.setUserId(MainActivity.CURRENT_USER_ID);
-
-            value.setFirebaseLogin(!MainActivity.LOCAL_LOGIN);
 
             searchInfoRepository.insert(value);
             liveToastMessage.postValue("Cautare salvata!");

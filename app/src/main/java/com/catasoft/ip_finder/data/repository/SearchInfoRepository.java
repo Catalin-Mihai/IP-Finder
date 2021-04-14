@@ -33,7 +33,7 @@ public class SearchInfoRepository {
         // one query is enough because LiveData is made i.e. to be automatically notified by room
         // when changes are made in db
         //FIREBASE_LOGIN = !LOCAL_LOGIN
-        liveCurrentUserSearchInfoList = searchInfoDao.getAllLiveCurrentUserSearches(MainActivity.CURRENT_USER_ID, !MainActivity.LOCAL_LOGIN);
+        liveCurrentUserSearchInfoList = searchInfoDao.getAllLiveCurrentUserSearches(MainActivity.CURRENT_USER_ID);
     }
 
     public void insert(SearchInfo value) {

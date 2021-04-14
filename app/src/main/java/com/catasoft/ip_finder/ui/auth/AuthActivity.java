@@ -29,10 +29,12 @@ import com.google.android.gms.tasks.Task;
 public class AuthActivity extends AppCompatActivity {
 
     public final static String PREFERENCES_KEY = "LOGIN_STATUS";
-    public final static String LOGGED_IN_ID_KEY = "LOGGED_IN_ID_KEY";
-    public final static String LOCAL_LOGGED_IN_ID_KEY = "LOCAL_LOGGED_IN_ID_KEY";
-    public final static String GUEST_SESSION_ID_KEY = "GUEST_SESSION_ID_KEY";
-    public final static String USER_ID_KEY = "USER_ID_KEY";
+    public final static String LOGGED_IN = "LOGGED_IN";
+    public final static String LOCAL_LOGGED_IN = "LOCAL_LOGGED_IN";
+    public final static String GUEST_SESSION = "GUEST_SESSION";
+    public final static String USER_ID = "USER_ID";
+    public final static long FIRST_PRIMARY_KEY = 1;
+    public final static long NO_USER = -1;
 
     private AuthViewModel authViewModel;
 
@@ -55,7 +57,7 @@ public class AuthActivity extends AppCompatActivity {
             public void onClick(View v) {
                 authViewModel.localLogin(new AuthActivityCallback() {
                     @Override
-                    public void goToMainActivity(boolean isLocalLogin, String userId) {
+                    public void goToMainActivity(boolean isLocalLogin, long userId) {
                         AuthActivity.this.goToMainActivity(isLocalLogin, userId);
                     }
                 });
@@ -67,7 +69,7 @@ public class AuthActivity extends AppCompatActivity {
             public void onClick(View v) {
                 authViewModel.localRegister(new AuthActivityCallback() {
                     @Override
-                    public void goToMainActivity(boolean isLocalLogin, String userId) {
+                    public void goToMainActivity(boolean isLocalLogin, long userId) {
                         AuthActivity.this.goToMainActivity(isLocalLogin, userId);
                     }
                 });
@@ -131,17 +133,14 @@ public class AuthActivity extends AppCompatActivity {
 
     private void handleRegisterOrLogin(GoogleSignInAccount account){
         if(account == null){
-            Toast.makeText(this, "Autentificare cu google nu a reusit", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Autentificarea cu google nu a reusit", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // create local account for room and login
-        UserAccount userAccount = new UserAccount(account.getDisplayName(),"firebase",
-                "", "", 1, 1);
-
-        authViewModel.googleLogin(userAccount, new AuthActivityCallback(){
+        authViewModel.googleLogin(new UserAccount(account.getDisplayName(),"firebase","", "",
+                        1, false), new AuthActivityCallback(){
             @Override
-            public void goToMainActivity(boolean isLocalLogin, String userId) {
+            public void goToMainActivity(boolean isLocalLogin, long userId) {
                 AuthActivity.this.goToMainActivity(false, userId);
             }
         });
@@ -158,29 +157,30 @@ public class AuthActivity extends AppCompatActivity {
                 Toast.makeText(AuthActivity.this, s, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
-    private void addUserInSharedPreferences(boolean isLocalLogin, String userId) {
+    private void addUserInSharedPreferences(boolean isLocalLogin, long userId) {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(LOGGED_IN_ID_KEY, true);
-        editor.putBoolean(LOCAL_LOGGED_IN_ID_KEY, isLocalLogin);
-        editor.putBoolean(GUEST_SESSION_ID_KEY, false);
-        editor.putString(USER_ID_KEY, userId);
+        editor.putBoolean(LOGGED_IN, true);
+        editor.putBoolean(LOCAL_LOGGED_IN, isLocalLogin);
+        editor.putBoolean(GUEST_SESSION, false);
+        editor.putLong(USER_ID, userId);
         editor.apply();
     }
 
     private void setGuestSharedPreferences() {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(LOGGED_IN_ID_KEY, false);
-        editor.putBoolean(LOCAL_LOGGED_IN_ID_KEY, false);
-        editor.putBoolean(GUEST_SESSION_ID_KEY, true);
-        editor.putString(USER_ID_KEY, "guest");
+        editor.putBoolean(LOGGED_IN, false);
+        editor.putBoolean(LOCAL_LOGGED_IN, false);
+        editor.putBoolean(GUEST_SESSION, true);
+        editor.putLong(USER_ID, NO_USER);
         editor.apply();
     }
 
-    private void goToMainActivity(boolean isLocalLogin, String userId){
+    private void goToMainActivity(boolean isLocalLogin, long userId){
         addUserInSharedPreferences(isLocalLogin, userId);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -192,6 +192,6 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public interface AuthActivityCallback {
-        void goToMainActivity(boolean isLocalLogin, String userId);
+        void goToMainActivity(boolean isLocalLogin, long userId);
     }
 }

@@ -15,23 +15,23 @@ public interface UserAccountDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(UserAccount value);
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
-    void update(UserAccount value);
-
     @Query("SELECT * FROM " + RoomConfig.USER_INFO_TABLE + " WHERE currentUser = 1")
     LiveData<UserAccount> getLiveCurrentUserAccount();
+
+    @Query("SELECT * FROM " + RoomConfig.USER_INFO_TABLE + " WHERE currentUser = 1")
+    UserAccount getCurrentUserAccount();
 
     @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET currentUser = 0 WHERE currentUser = 1")
     void unsetCurrentUser();
 
-    @Query("UPDATE " + RoomConfig.USER_INFO_TABLE +
-            " SET currentUser = 1 WHERE username = :username AND password = :password AND firebaseLogin = :firebaseLogin")
-    void setCurrentUser(String username, String password, int firebaseLogin);
+    @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET currentUser = 1 WHERE username = :username" +
+            " AND password = :password AND localLogin = :localLogin")
+    void setCurrentUser(String username, String password, boolean localLogin);
 
     @Query("UPDATE " + RoomConfig.USER_INFO_TABLE + " SET ip = :ip WHERE currentUser = 1")
     void updateCurrentUserIp(String ip);
 
     @Query("SELECT EXISTS(SELECT * FROM " + RoomConfig.USER_INFO_TABLE +
-            " WHERE username = :username AND password = :password AND firebaseLogin = :firebaseLogin)")
-    boolean checkUserAccount(String username, String password, int firebaseLogin);
+            " WHERE username = :username AND password = :password AND localLogin = :localLogin)")
+    boolean checkUserAccount(String username, String password, boolean localLogin);
 }

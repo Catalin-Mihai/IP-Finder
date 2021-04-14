@@ -18,24 +18,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.catasoft.ip_finder.MainActivity;
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
-import com.catasoft.ip_finder.databinding.FragmentSearchInfoBinding;
 import com.catasoft.ip_finder.databinding.HomeFragmentBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.jetbrains.annotations.NotNull;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -81,10 +72,10 @@ public class HomeFragment extends Fragment {
     private void resetSharedPreferences() {
         SharedPreferences preferences = getActivity().getSharedPreferences(AuthActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(AuthActivity.LOGGED_IN_ID_KEY, false);
-        editor.putBoolean(AuthActivity.LOCAL_LOGGED_IN_ID_KEY, false);
-        editor.putBoolean(AuthActivity.GUEST_SESSION_ID_KEY, false);
-        editor.putString(AuthActivity.USER_ID_KEY, "");
+        editor.putBoolean(AuthActivity.LOGGED_IN, false);
+        editor.putBoolean(AuthActivity.LOCAL_LOGGED_IN, false);
+        editor.putBoolean(AuthActivity.GUEST_SESSION, false);
+        editor.putString(AuthActivity.USER_ID, "");
         editor.apply();
 
         goToAuthActivity();

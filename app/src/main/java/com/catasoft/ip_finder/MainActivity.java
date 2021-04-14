@@ -17,15 +17,13 @@ import androidx.navigation.ui.NavigationUI;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.ActivityMainBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
-import com.catasoft.ip_finder.ui.guest.GuestActivity;
 import com.catasoft.ip_finder.ui.history.HistoryViewModel;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String CURRENT_USER_ID = "";
-    public static boolean LOCAL_LOGIN = false;
+    public static long CURRENT_USER_ID = -1;
     private HistoryViewModel historyViewModel;
 
     @Override
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(AuthActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
         // check if user is already logged in
-        if (!preferences.getBoolean(AuthActivity.LOGGED_IN_ID_KEY,false)){
+        if (!preferences.getBoolean(AuthActivity.LOGGED_IN,false)){
             // user is not logged in ==> redirect it to the login activity
             goToAuthActivity();
             return;
@@ -43,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
         // user was logged in ==> do the normal stuff for this activity
 
         // set current user id
-        CURRENT_USER_ID = preferences.getString(AuthActivity.USER_ID_KEY,"");
-        LOCAL_LOGIN = preferences.getBoolean(AuthActivity.LOCAL_LOGGED_IN_ID_KEY,false);
+        CURRENT_USER_ID = preferences.getLong(AuthActivity.USER_ID,-1);
+        if(CURRENT_USER_ID < AuthActivity.FIRST_PRIMARY_KEY){
+            Toast.makeText(MainActivity.this, "Unable to login", Toast.LENGTH_LONG).show();
+            goToAuthActivity();
+            return;
+        }
 
         // set data binding
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
