@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPFinder"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.SearchItemActivity"></activity>
+        <activity android:name=".ui.guest.GuestActivity"></activity>
+        <activity android:name=".ui.SearchItemActivity" />
         <activity android:name=".ui.auth.AuthActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

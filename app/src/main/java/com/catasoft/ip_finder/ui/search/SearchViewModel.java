@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.catasoft.ip_finder.MainActivity;
 import com.catasoft.ip_finder.Utilities;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
@@ -26,6 +27,8 @@ public class SearchViewModel extends AndroidViewModel {
 
     // Leave this with no initial value. If you put an initial value it will trigger setValue().
     private final MutableLiveData<String> liveToastMessage = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> liveGuestSession = new MutableLiveData<>(false);
 
     public final SearchInfoRepository searchInfoRepository;
 
@@ -95,9 +98,19 @@ public class SearchViewModel extends AndroidViewModel {
             int hour = cc.get(Calendar.HOUR_OF_DAY);
             int minute = cc.get(Calendar.MINUTE);
             int second = cc.get(Calendar.SECOND);
+
             value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+
+            value.setUserId(MainActivity.CURRENT_USER_ID);
+
             searchInfoRepository.insert(value);
             liveToastMessage.postValue("Cautare salvata!");
         }
     }
+
+    public void setLiveGuestSession(boolean value){
+        liveGuestSession.setValue(value);
+    }
+
+    public LiveData<Boolean> getLiveGuestSession(){ return liveGuestSession;}
 }

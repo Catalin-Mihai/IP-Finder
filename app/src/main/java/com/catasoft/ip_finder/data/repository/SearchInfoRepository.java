@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.catasoft.ip_finder.MainActivity;
 import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.dao.SearchInfoDao;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
@@ -20,7 +21,7 @@ import retrofit2.Response;
 public class SearchInfoRepository {
 
     private final SearchInfoDao searchInfoDao;
-    private final LiveData<List<SearchInfo>> liveSearchInfoList;
+    private final LiveData<List<SearchInfo>> liveCurrentUserSearchInfoList;
 
     public SearchInfoRepository(Application application) {
         // no need for db instance in class because communication will be made using dao interface
@@ -31,12 +32,12 @@ public class SearchInfoRepository {
 
         // one query is enough because LiveData is made i.e. to be automatically notified by room
         // when changes are made in db
-        liveSearchInfoList = searchInfoDao.getAllLiveSearches();
+        liveCurrentUserSearchInfoList = searchInfoDao.getAllLiveCurrentUserSearches(MainActivity.CURRENT_USER_ID);
     }
 
     public void insert(SearchInfo value) {
         AppRoomDatabase.databaseWriteExecutor.execute(() -> {
-            searchInfoDao.insert(value);
+                searchInfoDao.insert(value);
         });
     }
 
@@ -66,5 +67,5 @@ public class SearchInfoRepository {
 
     public LiveData<SearchInfo> getLiveSearchInfo(long searchId){ return searchInfoDao.getLiveSearchInfo(searchId); }
 
-    public LiveData<List<SearchInfo>> getAllLiveSearches(){ return liveSearchInfoList; }
+    public LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(){ return liveCurrentUserSearchInfoList; }
 }

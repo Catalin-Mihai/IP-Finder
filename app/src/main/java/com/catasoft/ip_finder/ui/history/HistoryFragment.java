@@ -12,19 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.catasoft.ip_finder.MainActivity;
-import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HistoryFragmentBinding;
-import com.catasoft.ip_finder.databinding.HomeFragmentBinding;
 import com.catasoft.ip_finder.ui.SearchItemActivity;
-import com.catasoft.ip_finder.ui.home.HomeViewModel;
 
 import java.util.List;
 
@@ -59,7 +54,7 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        mViewModel.getAllLiveSearches().observe(getViewLifecycleOwner(), new Observer<List<SearchInfo>>() {
+        mViewModel.getAllLiveCurrentUserSearches().observe(getViewLifecycleOwner(), new Observer<List<SearchInfo>>() {
             @Override
             public void onChanged(List<SearchInfo> searches) {
                 historyAdapter.setSearchInfoList(searches);
@@ -72,7 +67,7 @@ public class HistoryFragment extends Fragment {
         binding.rvHistory.setLayoutManager(manager);
         binding.rvHistory.addItemDecoration(new ItemDecoration(10));
 
-        historyAdapter = new HistoryAdapter(mViewModel.getAllLiveSearches().getValue(), new HistoryAdapter.AdapterListener(){
+        historyAdapter = new HistoryAdapter(mViewModel.getAllLiveCurrentUserSearches().getValue(), new HistoryAdapter.AdapterListener(){
             @Override
             public void onItemDelete(SearchInfo value) {
                 mViewModel.delete(value);

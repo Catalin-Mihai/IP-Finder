@@ -49,7 +49,7 @@ public class HistoryViewModel extends AndroidViewModel {
 
     public LiveData<SearchInfo> getLiveSearchInfo(long searchId){ return searchInfoRepository.getLiveSearchInfo(searchId); }
 
-    public LiveData<List<SearchInfo>> getAllLiveSearches(){ return searchInfoRepository.getAllLiveSearches(); }
+    public LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(){ return searchInfoRepository.getAllLiveCurrentUserSearches(); }
 
     public void checkEmptyMode(@NonNull List<SearchInfo> currentList) {
         if(currentList.isEmpty()){

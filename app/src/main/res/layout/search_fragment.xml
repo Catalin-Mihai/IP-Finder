@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.catasoft.ip_finder.ui.search.SearchViewModel" />
@@ -70,7 +71,8 @@
             android:id="@+id/btnLove"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="Adauga cautare"
+            android:visibility="@{viewModel.liveGuestSession ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

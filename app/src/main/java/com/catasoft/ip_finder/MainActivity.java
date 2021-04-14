@@ -1,5 +1,8 @@
 package com.catasoft.ip_finder;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -11,40 +14,47 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.ActivityMainBinding;
+import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.catasoft.ip_finder.ui.guest.GuestActivity;
 import com.catasoft.ip_finder.ui.history.HistoryViewModel;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class MainActivity extends AppCompatActivity {
 
+    public static String CURRENT_USER_ID = "";
     private HistoryViewModel historyViewModel;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        SharedPreferences preferences = getSharedPreferences(AuthActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        // check if user is already logged in
+        if (!preferences.getBoolean(AuthActivity.LOGGED_IN_ID_KEY,false)){
+            // user is not logged in ==> redirect it to the login activity
+            goToAuthActivity();
+            return;
+        }
+
+        // user was logged in ==> do the normal stuff for this activity
+
+        // set current user id
+        CURRENT_USER_ID = preferences.getString(AuthActivity.USER_ID_KEY,"");
+
+        // set data binding
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
 
+        // set navigation components
         NavHostFragment navHostFragment =
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
-
             NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-
-//            NavigationUI.setupActionBarWithNavController(this, navController);
+            //NavigationUI.setupActionBarWithNavController(this, navController);
         }
 
         setViewModel();
@@ -62,11 +72,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        historyViewModel.getAllLiveSearches().observe(this, new Observer<List<SearchInfo>>() {
+        historyViewModel.getAllLiveCurrentUserSearches().observe(this, new Observer<List<SearchInfo>>() {
             @Override
             public void onChanged(List<SearchInfo> searches) {
                 historyViewModel.checkEmptyMode(searches);
             }
         });
     }
+
+    private void goToAuthActivity(){
+        Intent intent = new Intent(this, AuthActivity.class);
+        startActivity(intent);
+    }
+
 }

@@ -5,26 +5,29 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.catasoft.ip_finder.data.entities.UserAccount;
-import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 import com.catasoft.ip_finder.data.repository.UserAccountRepository;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeViewModel extends AndroidViewModel {
 
     private final UserAccountRepository userAccountRepository;
 
-    private final LiveData<UserAccount> liveUser;
+    private final LiveData<UserAccount> liveCurrentUser;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
         userAccountRepository = new UserAccountRepository(application);
-        liveUser = userAccountRepository.getLiveUserAccount();
+        liveCurrentUser = userAccountRepository.getLiveCurrentUserAccount();
     }
 
-    public LiveData<UserAccount> getLiveUser() {
-        return liveUser;
+    public LiveData<UserAccount> getLiveCurrentUser() {
+        return liveCurrentUser;
     }
+
+    public void logout(){
+        userAccountRepository.logout();
+    }
+
+
 }

@@ -11,4 +11,6 @@ import retrofit2.http.Path;
 public interface ApiService {
     @GET("{query}")
     Call<SearchInfo> getSearchInfo(@Path("query") String query);
+
+
 }
