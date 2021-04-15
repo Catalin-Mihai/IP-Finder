@@ -23,9 +23,11 @@ public class SearchInfo implements Serializable {
     private String createdAt;
 
     private long userId;
+    private int previousUserSearchInfo;
 
     public SearchInfo(String country, String regionName, String city, double lat, double lon,
-                      String timezone, String isp, String query, String createdAt, long userId) {
+                      String timezone, String isp, String query, String createdAt, long userId,
+                      int previousUserSearchInfo) {
         this.country = country;
         this.regionName = regionName;
         this.city = city;
@@ -36,6 +38,7 @@ public class SearchInfo implements Serializable {
         this.query = query;
         this.createdAt = createdAt;
         this.userId = userId;
+        this.previousUserSearchInfo = previousUserSearchInfo;
     }
 
     public long getSearchId() {
@@ -124,5 +127,13 @@ public class SearchInfo implements Serializable {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public int getPreviousUserSearchInfo() {
+        return previousUserSearchInfo;
+    }
+
+    public void setPreviousUserSearchInfo(int previousUserSearchInfo) {
+        this.previousUserSearchInfo = previousUserSearchInfo;
     }
 }

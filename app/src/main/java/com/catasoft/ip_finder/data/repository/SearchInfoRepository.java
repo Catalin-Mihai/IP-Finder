@@ -3,12 +3,15 @@ package com.catasoft.ip_finder.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Query;
 
+import com.catasoft.ip_finder.data.room.RoomConfig;
 import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.dao.SearchInfoDao;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.room.AppRoomDatabase;
+import com.catasoft.ip_finder.ui.main.home.HomeViewModel;
 
 import java.util.List;
 
@@ -70,4 +73,16 @@ public class SearchInfoRepository {
     public LiveData<SearchInfo> getLiveSearchInfo(long searchId){ return searchInfoDao.getLiveSearchInfo(searchId); }
 
     public LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(){ return liveCurrentUserSearchInfoList; }
+
+    public void findPreviousSearchInfo(HomeViewModel.HomeViewModelCallback callback){
+        AppRoomDatabase.databaseWriteExecutor.execute(() -> {
+            SearchInfo searchInfo = searchInfoDao.getPreviousSearchInfo();
+            if(searchInfo != null){
+                searchInfoDao.deletePreviousSearchInfo();
+                callback.onSuccess(searchInfo);
+                return;
+            }
+            callback.onFailure();
+        });
+    }
 }

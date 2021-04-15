@@ -1,15 +1,24 @@
 package com.catasoft.ip_finder.ui.auth;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
@@ -20,6 +29,8 @@ import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.databinding.ActivityAuthBinding;
 import com.catasoft.ip_finder.ui.guest.GuestActivity;
 import com.catasoft.ip_finder.ui.helpers.LoadingDialog;
+import com.catasoft.ip_finder.ui.helpers.NetworkBroadcastReceiver;
+import com.catasoft.ip_finder.ui.helpers.Utilities;
 import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,6 +38,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -38,6 +50,7 @@ public class AuthActivity extends AppCompatActivity {
     public final static long FIRST_PRIMARY_KEY = 1;
     public final static long NO_USER = -1;
 
+    private ActivityAuthBinding binding;
     private AuthViewModel authViewModel;
 
     private GoogleSignInClient mGoogleSignInClient;
@@ -45,12 +58,15 @@ public class AuthActivity extends AppCompatActivity {
 
     private DialogFragment loadingDialog;
 
+    private NetworkBroadcastReceiver receiver;
+    private IntentFilter filter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // set data binding
-        ActivityAuthBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_auth);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth);
         binding.setLifecycleOwner(this);
         setViewModel();
         binding.setViewModel(authViewModel);
@@ -112,6 +128,8 @@ public class AuthActivity extends AppCompatActivity {
                 signInWithGoogle();
             }
         });
+
+        initNetworkBroadcastReceiver();
     }
 
     private void signInWithGoogle(){
@@ -236,8 +254,86 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            registerReceiver(receiver, filter);
+        }
+    }
+
+    private void setButtons(boolean value){
+        runOnUiThread(() -> {
+            binding.btnLocalLogin.setEnabled(value);
+            binding.btnLocalRegister.setEnabled(value);
+            binding.btnGoogle.setEnabled(value);
+            binding.btnGuest.setEnabled(value);
+        });
+    }
+
+    private void initNetworkBroadcastReceiver(){
+        receiver = new NetworkBroadcastReceiver();
+        receiver.setupListener(new NetworkBroadcastReceiver.NetworkListener() {
+            @Override
+            public void onChange(boolean isGoodConnection) {
+                if(isGoodConnection){
+                    setButtons(true);
+                }
+                else{
+                    setButtons(false);
+                    createNoInternetNotification("Fara conexiune",
+                            "Nu exista conexiune la internet! Nu se poate continua!");
+                }
+            }
+        });
+        filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+    }
+
+    private void createNoInternetNotification(String title, String message){
+
+        Intent notifyIntent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+
+        // Set the Activity to start in a new, empty task
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        // Create the PendingIntent
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        String CHANNEL_ID = "no-internet-notification-id";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentIntent(notifyPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "no-internet-notification-channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, builder.build());
+    }
+
     public interface AuthActivityCallback {
         void goToMainActivity(boolean isLocalLogin, long userId);
         AuthActivity getActivity();
     }
+
 }

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.catasoft.ip_finder">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,7 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPFinder"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.guest.GuestActivity"></activity>
+        <activity
+            android:name=".ui.changed.IpChangedActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""></activity>
+        <activity android:name=".ui.guest.GuestActivity" />
         <activity android:name=".ui.searchinfo.SearchItemActivity" />
         <activity android:name=".ui.auth.AuthActivity" />
         <activity android:name=".ui.main.MainActivity">

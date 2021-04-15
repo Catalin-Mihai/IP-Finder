@@ -20,6 +20,7 @@ import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.SearchFragmentBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.catasoft.ip_finder.ui.helpers.Utilities;
 import com.catasoft.ip_finder.ui.searchinfo.SearchInfoFragment;
 
 public class SearchFragment extends Fragment {
@@ -47,7 +48,7 @@ public class SearchFragment extends Fragment {
         binding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchViewModel.makeRequest();
+                searchViewModel.makeRequest(getContext());
             }
         });
 

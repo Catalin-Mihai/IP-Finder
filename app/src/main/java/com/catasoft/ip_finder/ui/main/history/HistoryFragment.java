@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HistoryFragmentBinding;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.catasoft.ip_finder.ui.searchinfo.SearchItemActivity;
 
 import java.util.List;
@@ -75,6 +76,11 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void startSearchItemActivity(SearchInfo searchInfo) {
+                if (!MainActivity.isGoodInternetConnection.get()){
+                    Toast.makeText(getContext(), "Nu exista conexiune la internet! " +
+                            "Nu se poate continua!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), SearchItemActivity.class);
                 intent.putExtra(SEARCH_ID,searchInfo);
                 startActivity(intent);

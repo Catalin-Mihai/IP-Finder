@@ -28,6 +28,12 @@ public interface SearchInfoDao {
     @Delete
     void deleteAll(List<SearchInfo> items);
 
+    @Query("DELETE FROM " + RoomConfig.SEARCHES_TABLE + " WHERE previousUserSearchInfo = 1")
+    void deletePreviousSearchInfo();
+
+    @Query("SELECT * FROM " + RoomConfig.SEARCHES_TABLE + " WHERE previousUserSearchInfo = 1")
+    SearchInfo getPreviousSearchInfo();
+
     @Query("SELECT * FROM " + RoomConfig.SEARCHES_TABLE + " WHERE searchId = :searchId")
     LiveData<SearchInfo> getLiveSearchInfo(long searchId);
 

@@ -46,8 +46,7 @@ public class HomeViewModel extends AndroidViewModel {
         userAccountRepository.logout();
     }
 
-    public void updateCurrentUserIp(){
-
+    public void updateCurrentUserIp(HomeFragment.HomeFragmentCallback callback){
         searchInfoRepository.makeRequest(new Callback<SearchInfo>() {
             @Override
             public void onResponse(@NotNull Call<SearchInfo> call, @NotNull Response<SearchInfo> response) {
@@ -57,8 +56,34 @@ public class HomeViewModel extends AndroidViewModel {
                     return;
                 }
 
-                userAccountRepository.updateCurrentUserIp(searchInfo.getQuery());
-                liveCurrentUserSearchInfo.setValue(searchInfo);
+                searchInfoRepository.findPreviousSearchInfo(new HomeViewModelCallback() {
+                    @Override
+                    public void onSuccess(SearchInfo previousSearchInfo) {
+                        String previousIp = previousSearchInfo.getQuery();
+
+                        userAccountRepository.updateCurrentUserIp(searchInfo.getQuery());
+                        searchInfo.setPreviousUserSearchInfo(1);
+                        searchInfo.setUserId(-1);
+                        searchInfoRepository.insert(searchInfo);
+                        liveCurrentUserSearchInfo.postValue(searchInfo);
+
+                        // if previous ip was changed ==> send a notification
+                        if(previousIp != null && !previousIp.equals(searchInfo.getQuery())){
+                            callback.showIpChangedNotification("IP schimbat",
+                                    "IP-ul tau public " + previousIp + " s-a schimbat. Noul tau IP public este " + searchInfo.getQuery(),
+                                    previousSearchInfo, searchInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        userAccountRepository.updateCurrentUserIp(searchInfo.getQuery());
+                        searchInfo.setPreviousUserSearchInfo(1);
+                        searchInfo.setUserId(-1);
+                        searchInfoRepository.insert(searchInfo);
+                        liveCurrentUserSearchInfo.postValue(searchInfo);
+                    }
+                });
             }
 
             @Override
@@ -66,6 +91,11 @@ public class HomeViewModel extends AndroidViewModel {
                 Log.e("[makeRequest]", "Request-ul pt ip-ul userului curent este on failure");
             }
         });
+    }
+
+    public interface HomeViewModelCallback {
+        void onSuccess(SearchInfo previousSearchInfo);
+        void onFailure();
     }
 
 }

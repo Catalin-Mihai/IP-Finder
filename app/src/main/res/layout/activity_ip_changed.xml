@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+            <import type="com.catasoft.ip_finder.data.entities.SearchInfo"/>
+            <variable
+                name="previousInfo"
+                type="SearchInfo" />
+            <variable
+                name="currentInfo"
+                type="SearchInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.changed.IpChangedActivity">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvPreviousInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Informatii anterioare"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/tvPreviousCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.country}" />
+
+            <TextView
+                android:id="@+id/tvPreviousRegionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.regionName}" />
+
+            <TextView
+                android:id="@+id/tvPreviousCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.city}" />
+
+            <TextView
+                android:id="@+id/tvPreviousLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(previousInfo.lat)}" />
+
+            <TextView
+                android:id="@+id/tvPreviousLon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(previousInfo.lon)}" />
+
+            <TextView
+                android:id="@+id/tvTimezone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.timezone}" />
+
+            <TextView
+                android:id="@+id/tvPreviousIsp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.isp}" />
+
+            <TextView
+                android:id="@+id/tvPreviousIp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{previousInfo.query}" />
+
+            <TextView
+                android:id="@+id/tvCurrentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Informatii curente"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCurrentCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.country}" />
+
+            <TextView
+                android:id="@+id/tvCurrentRegionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.regionName}" />
+
+            <TextView
+                android:id="@+id/tvCurrentCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.city}" />
+
+            <TextView
+                android:id="@+id/tvCurrentLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(currentInfo.lat)}" />
+
+            <TextView
+                android:id="@+id/tvCurrentLon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(currentInfo.lon)}" />
+
+            <TextView
+                android:id="@+id/tvCurrentTimezone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.timezone}" />
+
+            <TextView
+                android:id="@+id/tvCurrentIsp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.isp}" />
+
+            <TextView
+                android:id="@+id/tvCurrentIp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{currentInfo.query}" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

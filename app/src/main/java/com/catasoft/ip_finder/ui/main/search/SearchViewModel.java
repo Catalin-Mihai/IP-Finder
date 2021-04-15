@@ -1,16 +1,17 @@
 package com.catasoft.ip_finder.ui.main.search;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.catasoft.ip_finder.ui.main.MainActivity;
-import com.catasoft.ip_finder.ui.helpers.Utilities;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
+import com.catasoft.ip_finder.ui.helpers.Utilities;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ public class SearchViewModel extends AndroidViewModel {
         searchInfoRepository = new SearchInfoRepository(application);
     }
 
-    public void makeRequest(){
+    public void makeRequest(Context context){
 
         String ip = liveIp.getValue();
 
@@ -51,8 +52,8 @@ public class SearchViewModel extends AndroidViewModel {
             return;
         }
 
-        if(!Utilities.notGoodConnection(getApplication().getApplicationContext())){
-            liveToastMessage.setValue("Nu exista acces la internet");
+        if (!MainActivity.isGoodInternetConnection.get()){
+            liveToastMessage.setValue("Nu exista conexiune la internet");
             return;
         }
 
@@ -64,9 +65,8 @@ public class SearchViewModel extends AndroidViewModel {
                     liveToastMessage.setValue("Cautarea nu a fost buna");
                     return;
                 }
-
                 liveSearch.postValue(searchInfo);
-                liveToastMessage.setValue("Cautareaq s-a efectuat cu succes");
+                liveToastMessage.postValue("Cautarea s-a efectuat cu succes");
             }
 
             @Override
@@ -102,6 +102,8 @@ public class SearchViewModel extends AndroidViewModel {
 
             // link search with current user
             value.setUserId(MainActivity.CURRENT_USER_ID);
+
+            value.setPreviousUserSearchInfo(0);
 
             searchInfoRepository.insert(value);
             liveToastMessage.postValue("Cautare salvata!");

@@ -18,7 +18,7 @@ public class SearchItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // get transmitted lesson id from the previous activity
+
         Intent intent = getIntent();
         searchInfo = (SearchInfo) intent.getSerializableExtra(HistoryFragment.SEARCH_ID);
 

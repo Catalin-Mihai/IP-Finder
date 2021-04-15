@@ -1,25 +1,33 @@
 package com.catasoft.ip_finder.ui.main.home;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HomeFragmentBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.catasoft.ip_finder.ui.changed.IpChangedActivity;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,6 +37,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class HomeFragment extends Fragment {
+
+    public static final String PREVIOUS_INFO_ID = "PREVIOUS_INFO_ID";
+    public static final String CURRENT_INFO_ID = "CURRENT_INFO_ID";
 
     private HomeViewModel homeViewModel;
 
@@ -59,8 +70,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        homeViewModel.updateCurrentUserIp();
-
+        homeViewModel.updateCurrentUserIp(new HomeFragmentCallback() {
+            @Override
+            public void showIpChangedNotification(String title, String message, SearchInfo previousInfo, SearchInfo currentInfo) {
+                createIpChangedNotification(title, message, previousInfo, currentInfo);
+            }
+        });
         homeViewModel.getLiveSearchCurrentUser().observe(getViewLifecycleOwner(), new Observer<SearchInfo>() {
             @Override
             public void onChanged(SearchInfo searchInfo) {
@@ -113,6 +128,47 @@ public class HomeFragment extends Fragment {
                 });
             }
         }
+    }
+
+    public void createIpChangedNotification(String title, String message, SearchInfo previousInfo, SearchInfo currentInfo){
+
+        Intent notifyIntent = new Intent(getContext(), IpChangedActivity.class);
+        notifyIntent.putExtra(PREVIOUS_INFO_ID,previousInfo);
+        notifyIntent.putExtra(CURRENT_INFO_ID,currentInfo);
+
+        // Set the Activity to start in a new, empty task
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        // Create the PendingIntent
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                getContext(), 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        String CHANNEL_ID = "ip-changed-notification-id";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentIntent(notifyPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "ip-changed-notification-channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, builder.build());
+    }
+
+    public interface HomeFragmentCallback {
+        void showIpChangedNotification(String title, String message, SearchInfo previousInfo, SearchInfo currentInfo);
     }
 
 }
