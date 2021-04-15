@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.home;
+package com.catasoft.ip_finder.ui.main.home;
 
 import android.app.Application;
 import android.util.Log;

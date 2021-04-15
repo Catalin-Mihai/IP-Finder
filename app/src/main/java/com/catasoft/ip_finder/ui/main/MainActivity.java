@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder;
+package com.catasoft.ip_finder.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,17 +14,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.ActivityMainBinding;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
-import com.catasoft.ip_finder.ui.history.HistoryViewModel;
+import com.catasoft.ip_finder.ui.main.history.HistoryViewModel;
+import com.catasoft.ip_finder.ui.main.home.HomeViewModel;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static long CURRENT_USER_ID = -1;
-    private HistoryViewModel historyViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,32 +62,17 @@ public class MainActivity extends AppCompatActivity {
             //NavigationUI.setupActionBarWithNavController(this, navController);
         }
 
-        setViewModel();
-    }
-
-    private void setViewModel(){
-        // set ViewModel
-        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-
-        // set observers
-        historyViewModel.getLiveToastMessage().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        historyViewModel.getAllLiveCurrentUserSearches().observe(this, new Observer<List<SearchInfo>>() {
-            @Override
-            public void onChanged(List<SearchInfo> searches) {
-                historyViewModel.checkEmptyMode(searches);
-            }
-        });
     }
 
     private void goToAuthActivity(){
         Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        // disable back from main activity because is not necessary
+        //super.onBackPressed();
+    }
 }

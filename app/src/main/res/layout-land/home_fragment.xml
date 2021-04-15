@@ -6,14 +6,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.catasoft.ip_finder.ui.home.HomeViewModel" />
+            type="com.catasoft.ip_finder.ui.main.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        tools:context=".ui.main.home.HomeFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

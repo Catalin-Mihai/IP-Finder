@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.search;
+package com.catasoft.ip_finder.ui.main.search;
 
 import android.app.Application;
 
@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.catasoft.ip_finder.MainActivity;
-import com.catasoft.ip_finder.Utilities;
+import com.catasoft.ip_finder.ui.main.MainActivity;
+import com.catasoft.ip_finder.ui.helpers.Utilities;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 

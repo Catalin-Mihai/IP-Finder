@@ -1,19 +1,15 @@
-package com.catasoft.ip_finder.ui;
+package com.catasoft.ip_finder.ui.searchinfo;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.ActivitySearchItemBinding;
-import com.catasoft.ip_finder.ui.history.HistoryFragment;
-import com.catasoft.ip_finder.ui.searchinfo.SearchInfoFragment;
+import com.catasoft.ip_finder.ui.main.history.HistoryFragment;
 
 public class SearchItemActivity extends AppCompatActivity {
 

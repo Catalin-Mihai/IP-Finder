@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.history;
+package com.catasoft.ip_finder.ui.main.history;
 
 import android.view.LayoutInflater;
 import android.view.View;

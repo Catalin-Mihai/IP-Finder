@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.history;
+package com.catasoft.ip_finder.ui.main.history;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HistoryFragmentBinding;
-import com.catasoft.ip_finder.ui.SearchItemActivity;
+import com.catasoft.ip_finder.ui.searchinfo.SearchItemActivity;
 
 import java.util.List;
 

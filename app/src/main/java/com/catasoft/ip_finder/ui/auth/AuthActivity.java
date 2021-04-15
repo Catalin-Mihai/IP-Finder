@@ -11,14 +11,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.catasoft.ip_finder.MainActivity;
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.databinding.ActivityAuthBinding;
 import com.catasoft.ip_finder.ui.guest.GuestActivity;
+import com.catasoft.ip_finder.ui.helpers.LoadingDialog;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -41,6 +43,8 @@ public class AuthActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
+    private DialogFragment loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,11 @@ public class AuthActivity extends AppCompatActivity {
                     public void goToMainActivity(boolean isLocalLogin, long userId) {
                         AuthActivity.this.goToMainActivity(isLocalLogin, userId);
                     }
+
+                    @Override
+                    public AuthActivity getActivity() {
+                        return AuthActivity.this;
+                    }
                 });
             }
         });
@@ -72,6 +81,12 @@ public class AuthActivity extends AppCompatActivity {
                     public void goToMainActivity(boolean isLocalLogin, long userId) {
                         AuthActivity.this.goToMainActivity(isLocalLogin, userId);
                     }
+
+                    @Override
+                    public AuthActivity getActivity() {
+                        return AuthActivity.this;
+                    }
+
                 });
             }
         });
@@ -143,6 +158,11 @@ public class AuthActivity extends AppCompatActivity {
             public void goToMainActivity(boolean isLocalLogin, long userId) {
                 AuthActivity.this.goToMainActivity(false, userId);
             }
+
+            @Override
+            public AuthActivity getActivity() {
+                return AuthActivity.this;
+            }
         });
     }
 
@@ -184,6 +204,7 @@ public class AuthActivity extends AppCompatActivity {
         addUserInSharedPreferences(isLocalLogin, userId);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     private void goToGuestActivity(){
@@ -191,7 +212,32 @@ public class AuthActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        // disable back from main activity because is not necessary
+        //super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        dismissLoadingDialog();
+        super.onStop();
+    }
+
+    public void showLoadingDialog(String message){
+        loadingDialog = new LoadingDialog(message);
+        loadingDialog.show(getSupportFragmentManager(), "AuthActivity");
+    }
+
+    public void dismissLoadingDialog(){
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+            loadingDialog = null;
+        }
+    }
+
     public interface AuthActivityCallback {
         void goToMainActivity(boolean isLocalLogin, long userId);
+        AuthActivity getActivity();
     }
 }

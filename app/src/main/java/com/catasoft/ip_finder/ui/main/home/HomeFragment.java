@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.home;
+package com.catasoft.ip_finder.ui.main.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.catasoft.ip_finder.MainActivity;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HomeFragmentBinding;

@@ -6,17 +6,17 @@
     app:startDestination="@id/home">
     <fragment
         android:id="@+id/home"
-        android:name="com.catasoft.ip_finder.ui.home.HomeFragment"
+        android:name="com.catasoft.ip_finder.ui.main.home.HomeFragment"
         android:label="home_fragment"
         tools:layout="@layout/home_fragment" />
     <fragment
         android:id="@+id/history"
-        android:name="com.catasoft.ip_finder.ui.history.HistoryFragment"
+        android:name="com.catasoft.ip_finder.ui.main.history.HistoryFragment"
         android:label="history_fragment"
         tools:layout="@layout/history_fragment" />
     <fragment
         android:id="@+id/search"
-        android:name="com.catasoft.ip_finder.ui.search.SearchFragment"
+        android:name="com.catasoft.ip_finder.ui.main.search.SearchFragment"
         android:label="search_fragment"
         tools:layout="@layout/search_fragment" />
 </navigation>

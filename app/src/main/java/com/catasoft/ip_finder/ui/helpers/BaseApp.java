@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder;
+package com.catasoft.ip_finder.ui.helpers;
 
 import android.app.Application;
 
@@ -8,6 +8,6 @@ public class BaseApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppRoomDatabase.getDatabaseInstance(this);
+        //AppRoomDatabase.getDatabaseInstance(this);
     }
 }

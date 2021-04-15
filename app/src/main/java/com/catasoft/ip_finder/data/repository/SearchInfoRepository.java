@@ -4,19 +4,16 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.catasoft.ip_finder.MainActivity;
+import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.catasoft.ip_finder.data.api.ApiBuilder;
 import com.catasoft.ip_finder.data.dao.SearchInfoDao;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.room.AppRoomDatabase;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchInfoRepository {
 

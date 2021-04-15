@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.history;
+package com.catasoft.ip_finder.ui.main.history;
 
 import android.graphics.Rect;
 import android.view.View;

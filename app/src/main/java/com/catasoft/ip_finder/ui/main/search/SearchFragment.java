@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder.ui.search;
+package com.catasoft.ip_finder.ui.main.search;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;

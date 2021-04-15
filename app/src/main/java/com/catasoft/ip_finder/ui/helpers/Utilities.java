@@ -1,4 +1,4 @@
-package com.catasoft.ip_finder;
+package com.catasoft.ip_finder.ui.helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

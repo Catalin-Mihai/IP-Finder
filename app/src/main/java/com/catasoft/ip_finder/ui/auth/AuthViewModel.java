@@ -37,6 +37,7 @@ public class AuthViewModel extends AndroidViewModel {
             return;
         }
 
+        callback.getActivity().showLoadingDialog("Se face inregistrarea");
         userAccountRepository.registerLocalUser(new UserAccount(username,password,"","", 1, true),
                 new AuthViewModelCallback(){
                     @Override
@@ -46,6 +47,7 @@ public class AuthViewModel extends AndroidViewModel {
 
                     @Override
                     public void onFailure(String error) {
+                        callback.getActivity().dismissLoadingDialog();
                         liveToastMessage.postValue(error);
                     }
                 });
@@ -60,6 +62,7 @@ public class AuthViewModel extends AndroidViewModel {
             return;
         }
 
+        callback.getActivity().showLoadingDialog("Se face logarea");
         userAccountRepository.loginLocalUser(username, password, new AuthViewModelCallback(){
             @Override
             public void onSuccess(long userId) {
@@ -68,6 +71,7 @@ public class AuthViewModel extends AndroidViewModel {
 
             @Override
             public void onFailure(String error) {
+                callback.getActivity().dismissLoadingDialog();
                 liveToastMessage.postValue(error);
             }
         });
