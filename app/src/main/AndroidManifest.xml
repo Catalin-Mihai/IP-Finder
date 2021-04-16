@@ -19,7 +19,7 @@
             android:name=".ui.changed.IpChangedActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
-            android:taskAffinity=""></activity>
+            android:taskAffinity="" />
         <activity android:name=".ui.guest.GuestActivity" />
         <activity android:name=".ui.searchinfo.SearchItemActivity" />
         <activity android:name=".ui.auth.AuthActivity" />

@@ -1,16 +1,14 @@
 package com.catasoft.ip_finder.ui.changed;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
-import com.catasoft.ip_finder.databinding.ActivityGuestBinding;
 import com.catasoft.ip_finder.databinding.ActivityIpChangedBinding;
-import com.catasoft.ip_finder.ui.main.history.HistoryFragment;
 import com.catasoft.ip_finder.ui.main.home.HomeFragment;
 
 public class IpChangedActivity extends AppCompatActivity {

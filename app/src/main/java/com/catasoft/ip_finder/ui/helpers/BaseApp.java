@@ -2,12 +2,14 @@ package com.catasoft.ip_finder.ui.helpers;
 
 import android.app.Application;
 
-import com.catasoft.ip_finder.data.room.AppRoomDatabase;
-
 public class BaseApp extends Application {
+    private static BaseApp baseApp;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        //AppRoomDatabase.getDatabaseInstance(this);
+        baseApp = this;
     }
+
+    public static BaseApp getInstance() {return baseApp;}
 }

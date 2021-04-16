@@ -30,7 +30,6 @@ import com.catasoft.ip_finder.databinding.ActivityAuthBinding;
 import com.catasoft.ip_finder.ui.guest.GuestActivity;
 import com.catasoft.ip_finder.ui.helpers.LoadingDialog;
 import com.catasoft.ip_finder.ui.helpers.NetworkBroadcastReceiver;
-import com.catasoft.ip_finder.ui.helpers.Utilities;
 import com.catasoft.ip_finder.ui.main.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -38,26 +37,27 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 
 public class AuthActivity extends AppCompatActivity {
 
-    public final static String PREFERENCES_KEY = "LOGIN_STATUS";
+    public final static String LOGIN_STATUS_KEY = "LOGIN_STATUS";
     public final static String LOGGED_IN = "LOGGED_IN";
     public final static String LOCAL_LOGGED_IN = "LOCAL_LOGGED_IN";
     public final static String GUEST_SESSION = "GUEST_SESSION";
     public final static String USER_ID = "USER_ID";
+
     public final static long FIRST_PRIMARY_KEY = 1;
     public final static long NO_USER = -1;
 
     private ActivityAuthBinding binding;
     private AuthViewModel authViewModel;
+    private DialogFragment loadingDialog;
 
+    // for google auth with firebase
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
-    private DialogFragment loadingDialog;
-
+    // for broadcast receiver
     private NetworkBroadcastReceiver receiver;
     private IntentFilter filter;
 
@@ -110,7 +110,6 @@ public class AuthActivity extends AppCompatActivity {
         binding.btnGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setGuestSharedPreferences();
                 AuthActivity.this.goToGuestActivity();
             }
         });
@@ -166,15 +165,15 @@ public class AuthActivity extends AppCompatActivity {
 
     private void handleRegisterOrLogin(GoogleSignInAccount account){
         if(account == null){
-            Toast.makeText(this, "Autentificarea cu google nu a reusit", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.auth_google_login_error_1, Toast.LENGTH_LONG).show();
             return;
         }
 
-        authViewModel.googleLogin(new UserAccount(account.getDisplayName(),"firebase","", "",
+        authViewModel.googleLogin(new UserAccount(account.getDisplayName(),null,null, null,
                         1, false), new AuthActivityCallback(){
             @Override
             public void goToMainActivity(boolean isLocalLogin, long userId) {
-                AuthActivity.this.goToMainActivity(false, userId);
+                AuthActivity.this.goToMainActivity(isLocalLogin, userId);
             }
 
             @Override
@@ -199,7 +198,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void addUserInSharedPreferences(boolean isLocalLogin, long userId) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(LOGIN_STATUS_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(LOGGED_IN, true);
         editor.putBoolean(LOCAL_LOGGED_IN, isLocalLogin);
@@ -209,7 +208,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void setGuestSharedPreferences() {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(LOGIN_STATUS_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(LOGGED_IN, false);
         editor.putBoolean(LOCAL_LOGGED_IN, false);
@@ -226,6 +225,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void goToGuestActivity(){
+        setGuestSharedPreferences();
         Intent intent = new Intent(this, GuestActivity.class);
         startActivity(intent);
     }
@@ -284,11 +284,13 @@ public class AuthActivity extends AppCompatActivity {
             public void onChange(boolean isGoodConnection) {
                 if(isGoodConnection){
                     setButtons(true);
+                    MainActivity.IS_GOOD_INTERNET_CONNECTION.set(true);
                 }
                 else{
                     setButtons(false);
-                    createNoInternetNotification("Fara conexiune",
-                            "Nu exista conexiune la internet! Nu se poate continua!");
+                    MainActivity.IS_GOOD_INTERNET_CONNECTION.set(false);
+                    createNoInternetNotification(getString(R.string.auth_activity_connexion_error_1),
+                            getString(R.string.auth_activity_connexion_error_message_1));
                 }
             }
         });
@@ -335,5 +337,4 @@ public class AuthActivity extends AppCompatActivity {
         void goToMainActivity(boolean isLocalLogin, long userId);
         AuthActivity getActivity();
     }
-
 }

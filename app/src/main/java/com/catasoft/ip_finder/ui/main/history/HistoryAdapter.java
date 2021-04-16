@@ -61,13 +61,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.SearchHo
 
         private final TextView tvIp;
         private final TextView tvSearchTime;
-        private final ImageButton btnDelete;
 
         public SearchHolder(@NonNull View itemView) {
             super(itemView);
             tvIp = itemView.findViewById(R.id.tvIp);
             tvSearchTime = itemView.findViewById(R.id.tvSearchTime);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+            ImageButton btnDelete = itemView.findViewById(R.id.btnDelete);
 
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

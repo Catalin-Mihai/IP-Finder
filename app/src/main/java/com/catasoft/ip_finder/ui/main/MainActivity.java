@@ -19,8 +19,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.databinding.ActivityMainBinding;
-import com.catasoft.ip_finder.ui.helpers.NetworkBroadcastReceiver;
 import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.catasoft.ip_finder.ui.helpers.NetworkBroadcastReceiver;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,10 +28,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MainActivity extends AppCompatActivity {
 
     public static long CURRENT_USER_ID = -1;
+    public static AtomicBoolean IS_GOOD_INTERNET_CONNECTION = new AtomicBoolean(false);
+
     private ActivityMainBinding binding;
     private Snackbar snackbar;
-    public static AtomicBoolean isGoodInternetConnection = new AtomicBoolean(false);
 
+    // for broadcast receiver
     private NetworkBroadcastReceiver receiver;
     private IntentFilter filter;
 
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences preferences = getSharedPreferences(AuthActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(AuthActivity.LOGIN_STATUS_KEY, Context.MODE_PRIVATE);
         // check if user is already logged in
         if (!preferences.getBoolean(AuthActivity.LOGGED_IN,false)){
             // user is not logged in ==> redirect it to the login activity
@@ -48,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // user was logged in ==> do the normal stuff for this activity
-        // set current user id
+
         CURRENT_USER_ID = preferences.getLong(AuthActivity.USER_ID,-1);
         if(CURRENT_USER_ID < AuthActivity.FIRST_PRIMARY_KEY){
-            Toast.makeText(MainActivity.this, "Unable to login", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, R.string.main_activity_login_error_1, Toast.LENGTH_LONG).show();
             goToAuthActivity();
             return;
         }
@@ -61,16 +63,14 @@ public class MainActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         // set navigation components
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-            //NavigationUI.setupActionBarWithNavController(this, navController);
+            // NavigationUI.setupActionBarWithNavController(this, navController);
         }
 
         initNetworkBroadcastReceiver();
-
     }
 
     private void goToAuthActivity(){
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         receiver.setupListener(new NetworkBroadcastReceiver.NetworkListener() {
             @Override
             public void onChange(boolean isGoodConnection) {
-                isGoodInternetConnection.set(isGoodConnection);
+                IS_GOOD_INTERNET_CONNECTION.set(isGoodConnection);
                 if(!isGoodConnection){
                     showSnackBar();
                 }
@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSnackBar(){
-        snackbar = Snackbar.make(binding.getRoot(),"Fara conexiune", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Go to settings", new View.OnClickListener() {
+        snackbar = Snackbar.make(binding.getRoot(),R.string.main_activity_connexion_error_1, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.go_to_settings, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
@@ -134,5 +134,4 @@ public class MainActivity extends AppCompatActivity {
             snackbar = null;
         }
     }
-
 }

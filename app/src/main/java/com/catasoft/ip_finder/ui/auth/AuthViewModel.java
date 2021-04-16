@@ -1,17 +1,8 @@
 package com.catasoft.ip_finder.ui.auth;
 
 import android.app.Application;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.provider.Settings;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -20,11 +11,10 @@ import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.data.repository.UserAccountRepository;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class AuthViewModel extends AndroidViewModel {
 
     private final UserAccountRepository userAccountRepository;
+
     // Leave this with no initial value. If you put an initial value it will trigger setValue().
     private final MutableLiveData<String> liveToastMessage = new MutableLiveData<>();
 
@@ -45,17 +35,17 @@ public class AuthViewModel extends AndroidViewModel {
         String password = liveLocalPassword.getValue();
 
         if(username == null || password == null){
-            liveToastMessage.setValue("Username-ul sau parola este null");
+            liveToastMessage.postValue(callback.getActivity().getString(R.string.auth_null_username_or_password));
             return;
         }
 
         if(username.trim().isEmpty() || password.trim().isEmpty()){
-            liveToastMessage.setValue("Username-ul sau parola nu are formatul corect");
+            liveToastMessage.postValue(callback.getActivity().getString(R.string.auth_wrong__username_or_password));
             return;
         }
 
-        callback.getActivity().showLoadingDialog("Se face inregistrarea");
-        userAccountRepository.registerLocalUser(new UserAccount(username,password,"","", 1, true),
+        callback.getActivity().showLoadingDialog(callback.getActivity().getString(R.string.auth_register_loading_message));
+        userAccountRepository.registerLocalUser(new UserAccount(username,password,null,null, 1, true),
                 new AuthViewModelCallback(){
                     @Override
                     public void onSuccess(long userId) {
@@ -75,11 +65,11 @@ public class AuthViewModel extends AndroidViewModel {
         String password = liveLocalPassword.getValue();
 
         if(username == null || password == null){
-            liveToastMessage.setValue("Username-ul sau parola este null");
+            liveToastMessage.postValue(callback.getActivity().getString(R.string.auth_null_username_or_password));
             return;
         }
 
-        callback.getActivity().showLoadingDialog("Se face logarea");
+        callback.getActivity().showLoadingDialog(callback.getActivity().getString(R.string.auth_login_loading_message));
         userAccountRepository.loginLocalUser(username, password, new AuthViewModelCallback(){
             @Override
             public void onSuccess(long userId) {
@@ -99,7 +89,7 @@ public class AuthViewModel extends AndroidViewModel {
         String password = userAccount.getPassword();
 
         if(username == null || password == null){
-            liveToastMessage.setValue("Nu a putut fi efectuata logarea cu Google");
+            liveToastMessage.postValue(callback.getActivity().getString(R.string.auth_google_login_error_2));
             return;
         }
 

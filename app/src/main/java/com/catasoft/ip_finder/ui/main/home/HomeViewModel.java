@@ -8,10 +8,13 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 import com.catasoft.ip_finder.data.repository.UserAccountRepository;
+import com.catasoft.ip_finder.ui.auth.AuthActivity;
+import com.catasoft.ip_finder.ui.helpers.BaseApp;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +55,7 @@ public class HomeViewModel extends AndroidViewModel {
             public void onResponse(@NotNull Call<SearchInfo> call, @NotNull Response<SearchInfo> response) {
                 SearchInfo searchInfo = response.body();
                 if(searchInfo == null || searchInfo.getQuery() == null){
-                    Log.e("[makeRequest]", "Request-ul pt ip-ul userului curent nu este bun");
+                    Log.e("[updateCurrentUserIp]", "Received request for current user IP is null");
                     return;
                 }
 
@@ -61,26 +64,34 @@ public class HomeViewModel extends AndroidViewModel {
                     public void onSuccess(SearchInfo previousSearchInfo) {
                         String previousIp = previousSearchInfo.getQuery();
 
+                        // add current ip in db
                         userAccountRepository.updateCurrentUserIp(searchInfo.getQuery());
+                        // this will be previous IP for the next call of the 'updateCurrentUserIp'
                         searchInfo.setPreviousUserSearchInfo(1);
-                        searchInfo.setUserId(-1);
+                        searchInfo.setUserId(AuthActivity.NO_USER);
                         searchInfoRepository.insert(searchInfo);
+                        // this will trigger addMarker for google map
                         liveCurrentUserSearchInfo.postValue(searchInfo);
 
-                        // if previous ip was changed ==> send a notification
+                        // if previous ip != current ip ==> send a notification
                         if(previousIp != null && !previousIp.equals(searchInfo.getQuery())){
-                            callback.showIpChangedNotification("IP schimbat",
-                                    "IP-ul tau public " + previousIp + " s-a schimbat. Noul tau IP public este " + searchInfo.getQuery(),
-                                    previousSearchInfo, searchInfo);
+                            callback.showIpChangedNotification(
+                                    BaseApp.getInstance().getString(R.string.ip_changed_notification_title),
+                                    BaseApp.getInstance().getString(R.string.ip_changed_notification_message),
+                                    previousSearchInfo, searchInfo
+                            );
                         }
                     }
 
                     @Override
                     public void onFailure() {
+                        // here no previous IP was found ==> add current ip in db
                         userAccountRepository.updateCurrentUserIp(searchInfo.getQuery());
+                        // this will be previous IP for the next call of the 'updateCurrentUserIp'
                         searchInfo.setPreviousUserSearchInfo(1);
-                        searchInfo.setUserId(-1);
+                        searchInfo.setUserId(AuthActivity.NO_USER);
                         searchInfoRepository.insert(searchInfo);
+                        // this will trigger addMarker for google map
                         liveCurrentUserSearchInfo.postValue(searchInfo);
                     }
                 });
@@ -88,7 +99,7 @@ public class HomeViewModel extends AndroidViewModel {
 
             @Override
             public void onFailure(@NotNull Call<SearchInfo> call, @NotNull Throwable t) {
-                Log.e("[makeRequest]", "Request-ul pt ip-ul userului curent este on failure");
+                Log.e("[updateCurrentUserIp]", "request for current user IP is on failure");
             }
         });
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.data.repository.SearchInfoRepository;
 import com.catasoft.ip_finder.ui.helpers.Utilities;
@@ -23,37 +24,52 @@ import retrofit2.Response;
 
 public class SearchViewModel extends AndroidViewModel {
 
-    public MutableLiveData<String> liveIp = new MutableLiveData<>();
-    public MutableLiveData<SearchInfo> liveSearch = new MutableLiveData<>();
+    private final SearchInfoRepository searchInfoRepository;
 
     // Leave this with no initial value. If you put an initial value it will trigger setValue().
     private final MutableLiveData<String> liveToastMessage = new MutableLiveData<>();
 
+    private final MutableLiveData<String> liveIp = new MutableLiveData<>();
+    private final MutableLiveData<SearchInfo> liveSearch = new MutableLiveData<>();
     private final MutableLiveData<Boolean> liveGuestSession = new MutableLiveData<>(false);
-
-    public final SearchInfoRepository searchInfoRepository;
 
     public SearchViewModel(@NonNull Application application) {
         super(application);
         searchInfoRepository = new SearchInfoRepository(application);
     }
 
+    public LiveData<SearchInfo> getLiveSearch() {
+        return liveSearch;
+    }
+
+    public MutableLiveData<String> getLiveIp() {
+        return liveIp;
+    }
+
+    public LiveData<String> getLiveToastMessage() {
+        return liveToastMessage;
+    }
+
+    public LiveData<Boolean> getLiveGuestSession(){ return liveGuestSession;}
+
+    public void setLiveGuestSession(boolean value){
+        liveGuestSession.postValue(value);
+    }
+
     public void makeRequest(Context context){
-
         String ip = liveIp.getValue();
-
         if(ip == null){
-            liveToastMessage.setValue("Ip-ul este null");
+            liveToastMessage.postValue(context.getString(R.string.ip_null));
             return;
         }
 
         if(!Utilities.isValid(ip)){
-            liveToastMessage.setValue("Formatul ip-ului nu este corect");
+            liveToastMessage.postValue(context.getString(R.string.ip_wrong));
             return;
         }
 
-        if (!MainActivity.isGoodInternetConnection.get()){
-            liveToastMessage.setValue("Nu exista conexiune la internet");
+        if (!MainActivity.IS_GOOD_INTERNET_CONNECTION.get()){
+            liveToastMessage.postValue(context.getString(R.string.no_internet_connexion));
             return;
         }
 
@@ -62,57 +78,43 @@ public class SearchViewModel extends AndroidViewModel {
             public void onResponse(@NotNull Call<SearchInfo> call, @NotNull Response<SearchInfo> response) {
                 SearchInfo searchInfo = response.body();
                 if(searchInfo == null || searchInfo.getCity() == null){
-                    liveToastMessage.setValue("Cautarea nu a fost buna");
+                    liveToastMessage.postValue(context.getString(R.string.ip_search_unexpected_error));
                     return;
                 }
                 liveSearch.postValue(searchInfo);
-                liveToastMessage.postValue("Cautarea s-a efectuat cu succes");
+                liveToastMessage.postValue(context.getString(R.string.ip_search_successfully));
             }
 
             @Override
             public void onFailure(@NotNull Call<SearchInfo> call, @NotNull Throwable t) {
-                liveToastMessage.postValue("Eroare neasteptata la cautare!");
+                liveToastMessage.postValue(context.getString(R.string.ip_search_unexpected_error));
             }
         });
     }
 
-    public void setLiveSearch(SearchInfo search) {
-        this.liveSearch.setValue(search);
-    }
-
-    public LiveData<SearchInfo> getLiveSearch() {
-        return liveSearch;
-    }
-
-    public LiveData<String> getLiveToastMessage() {
-        return liveToastMessage;
-    }
-
-    public void saveSearch(){
+    public void saveSearch(Context context){
         SearchInfo value = liveSearch.getValue();
-        if(value != null){
-            Calendar cc = Calendar.getInstance();
-            int year = cc.get(Calendar.YEAR);
-            int month = cc.get(Calendar.MONTH);
-            int day = cc.get(Calendar.DAY_OF_MONTH);
-            int hour = cc.get(Calendar.HOUR_OF_DAY);
-            int minute = cc.get(Calendar.MINUTE);
-            int second = cc.get(Calendar.SECOND);
-            value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
-
-            // link search with current user
-            value.setUserId(MainActivity.CURRENT_USER_ID);
-
-            value.setPreviousUserSearchInfo(0);
-
-            searchInfoRepository.insert(value);
-            liveToastMessage.postValue("Cautare salvata!");
+        if(value == null) {
+            liveToastMessage.postValue(context.getString(R.string.ip_no_search));
+            return;
         }
+
+        Calendar cc = Calendar.getInstance();
+        int year = cc.get(Calendar.YEAR);
+        int month = cc.get(Calendar.MONTH);
+        int day = cc.get(Calendar.DAY_OF_MONTH);
+        int hour = cc.get(Calendar.HOUR_OF_DAY);
+        int minute = cc.get(Calendar.MINUTE);
+        int second = cc.get(Calendar.SECOND);
+        value.setCreatedAt(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+
+        // link search with current user
+        value.setUserId(MainActivity.CURRENT_USER_ID);
+
+        value.setPreviousUserSearchInfo(0);
+
+        searchInfoRepository.insert(value);
+        liveToastMessage.postValue(context.getString(R.string.ip_search_saved));
     }
 
-    public void setLiveGuestSession(boolean value){
-        liveGuestSession.setValue(value);
-    }
-
-    public LiveData<Boolean> getLiveGuestSession(){ return liveGuestSession;}
 }

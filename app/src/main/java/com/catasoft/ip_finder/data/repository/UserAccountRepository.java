@@ -4,10 +4,12 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.dao.UserAccountDao;
 import com.catasoft.ip_finder.data.entities.UserAccount;
 import com.catasoft.ip_finder.data.room.AppRoomDatabase;
 import com.catasoft.ip_finder.ui.auth.AuthViewModel;
+import com.catasoft.ip_finder.ui.helpers.BaseApp;
 
 public class UserAccountRepository {
 
@@ -39,14 +41,14 @@ public class UserAccountRepository {
                 if(userAccountDao.insert(value) > 0){
                     UserAccount tmp = userAccountDao.getCurrentUserAccount();
                     if(tmp == null){
-                        callback.onFailure("Eroare la preluarea userului");
+                        callback.onFailure(BaseApp.getInstance().getString(R.string.user_fetch_error));
                         return;
                     }
                     callback.onSuccess(tmp.getUserId());
                     return;
                 }
             }
-            callback.onFailure("Eroare la inregistrarea userului");
+            callback.onFailure(BaseApp.getInstance().getString(R.string.user_register_error));
         });
     }
 
@@ -58,13 +60,13 @@ public class UserAccountRepository {
                 userAccountDao.setCurrentUser(username, password, true);
                 UserAccount tmp = userAccountDao.getCurrentUserAccount();
                 if(tmp == null){
-                    callback.onFailure("Eroare la preluarea userului");
+                    callback.onFailure(BaseApp.getInstance().getString(R.string.user_fetch_error));
                     return;
                 }
                 callback.onSuccess(tmp.getUserId());
                 return;
             }
-            callback.onFailure("Username sau parola gresita");
+            callback.onFailure(BaseApp.getInstance().getString(R.string.user_no_exists_error));
         });
     }
 
@@ -76,7 +78,8 @@ public class UserAccountRepository {
                 userAccountDao.setCurrentUser(value.getUsername(), value.getPassword(), false);
                 UserAccount tmp = userAccountDao.getCurrentUserAccount();
                 if(tmp == null){
-                    callback.onFailure("Eroare la preluarea userului");
+                    callback.onFailure(BaseApp.getInstance().getString(R.string.user_fetch_error));
+
                     return;
                 }
                 callback.onSuccess(tmp.getUserId());
@@ -89,13 +92,13 @@ public class UserAccountRepository {
             if(userAccountDao.insert(value) > 0){
                 UserAccount tmp = userAccountDao.getCurrentUserAccount();
                 if(tmp == null){
-                    callback.onFailure("Eroare la preluarea userului");
+                    callback.onFailure(BaseApp.getInstance().getString(R.string.user_fetch_error));
                     return;
                 }
                 callback.onSuccess(tmp.getUserId());
                 return;
             }
-            callback.onFailure("Logarea cu Google nu a reusit");
+            callback.onFailure(BaseApp.getInstance().getString(R.string.user_google_error));
         });
     }
 
@@ -108,5 +111,4 @@ public class UserAccountRepository {
             userAccountDao.updateCurrentUserIp(ip);
         });
     }
-
 }

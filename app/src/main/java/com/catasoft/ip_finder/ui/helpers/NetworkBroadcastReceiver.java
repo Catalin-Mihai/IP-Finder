@@ -3,7 +3,6 @@ package com.catasoft.ip_finder.ui.helpers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 
 public class NetworkBroadcastReceiver extends BroadcastReceiver {
 

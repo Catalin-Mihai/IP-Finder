@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.catasoft.ip_finder.R;
 import com.catasoft.ip_finder.data.entities.SearchInfo;
 import com.catasoft.ip_finder.databinding.HistoryFragmentBinding;
 import com.catasoft.ip_finder.ui.main.MainActivity;
@@ -29,7 +30,7 @@ public class HistoryFragment extends Fragment {
     public static final String SEARCH_ID = "SEARCH_ID";
 
     private HistoryFragmentBinding binding;
-    private HistoryViewModel mViewModel;
+    private HistoryViewModel historyViewModel;
     private HistoryAdapter historyAdapter;
 
     @Override
@@ -43,19 +44,19 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
+        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
 
         startRecyclerView();
 
         // set observers
-        mViewModel.getLiveToastMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
+        historyViewModel.getLiveToastMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
             }
         });
 
-        mViewModel.getAllLiveCurrentUserSearches().observe(getViewLifecycleOwner(), new Observer<List<SearchInfo>>() {
+        historyViewModel.getAllLiveCurrentUserSearches().observe(getViewLifecycleOwner(), new Observer<List<SearchInfo>>() {
             @Override
             public void onChanged(List<SearchInfo> searches) {
                 historyAdapter.setSearchInfoList(searches);
@@ -68,17 +69,17 @@ public class HistoryFragment extends Fragment {
         binding.rvHistory.setLayoutManager(manager);
         binding.rvHistory.addItemDecoration(new ItemDecoration(10));
 
-        historyAdapter = new HistoryAdapter(mViewModel.getAllLiveCurrentUserSearches().getValue(), new HistoryAdapter.AdapterListener(){
+        historyAdapter = new HistoryAdapter(historyViewModel.getAllLiveCurrentUserSearches().getValue(), new HistoryAdapter.AdapterListener(){
             @Override
             public void onItemDelete(SearchInfo value) {
-                mViewModel.delete(value);
+                historyViewModel.delete(value);
             }
 
             @Override
             public void startSearchItemActivity(SearchInfo searchInfo) {
-                if (!MainActivity.isGoodInternetConnection.get()){
-                    Toast.makeText(getContext(), "Nu exista conexiune la internet! " +
-                            "Nu se poate continua!", Toast.LENGTH_SHORT).show();
+                if (!MainActivity.IS_GOOD_INTERNET_CONNECTION.get()){
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.no_internet_connexion) + " " +
+                            requireContext().getString(R.string.cannot_continue), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent = new Intent(getContext(), SearchItemActivity.class);
@@ -88,5 +89,4 @@ public class HistoryFragment extends Fragment {
         });
         binding.rvHistory.setAdapter(historyAdapter);
     }
-
 }

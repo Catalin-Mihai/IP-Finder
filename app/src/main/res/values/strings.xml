@@ -6,6 +6,32 @@
     <string name="cautari">Cautari</string>
     <string name="salvari">Salvari</string>
     <string name="logout">Logout</string>
+    <string name="main_activity_login_error_1">Nu se poate realiza autentificarea</string>
+    <string name="main_activity_connexion_error_1">Fara conexiune</string>
+    <string name="go_to_settings">Mergi la setari</string>
+    <string name="auth_google_login_error_1">Autentificarea cu google nu a reusit</string>
+    <string name="auth_google_login_error_2">Nu a putut fi efectuata logarea cu Google</string>
+    <string name="auth_activity_connexion_error_1">Fara conexiune</string>
+    <string name="auth_activity_connexion_error_message_1">Nu exista conexiune la internet! Nu se poate continua!</string>
+    <string name="auth_null_username_or_password">Username-ul sau parola este null</string>
+    <string name="auth_wrong__username_or_password">Username-ul sau parola nu are formatul corect</string>
+    <string name="auth_register_loading_message">Se face inregistrarea</string>
+    <string name="auth_login_loading_message">Se face logarea</string>
+    <string name="ip_changed_notification_title">IP schimbat</string>
+    <string name="ip_changed_notification_message">IP-ul tau public s-a schimbat. Apasa aici pentru a vedea noul tau IP public.</string>
+    <string name="ip_null">Ip-ul nu a fost introdus</string>
+    <string name="ip_wrong">Formatul ip-ului nu este corect</string>
+    <string name="no_internet_connexion">Nu exista conexiune la internet</string>
+    <string name="ip_search_successfully">Cautarea s-a efectuat cu succes</string>
+    <string name="ip_search_unexpected_error">Eroare neasteptata la cautare</string>
+    <string name="ip_search_saved">Cautare salvata</string>
+    <string name="ip_no_search">Nu a fost efectuata nici o cautare</string>
+    <string name="cannot_continue">Nu se poate continua!</string>
+    <string name="user_fetch_error">Eroare la preluarea userului</string>
+    <string name="user_register_error">Eroare la inregistrarea userului</string>
+    <string name="user_no_exists_error">Contul asociat acestor credentiale nu exista</string>
+    <string name="user_google_error">Logarea cu Google nu a reusit</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

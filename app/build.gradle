@@ -38,7 +38,7 @@ android {
 
 dependencies {
 
-    //Google maps
+    // Google maps
     // GMS
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    def nav_version = "2.3.4"
+    def nav_version = "2.3.5"
 
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
@@ -71,7 +71,7 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
     // Jetpack Compose Integration
-    implementation "androidx.navigation:navigation-compose:1.0.0-alpha09"
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha10"
 
     // Room components
     def room_version = "2.2.6"
@@ -88,12 +88,12 @@ dependencies {
     // if you upgrade from java-8 change this
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    //Retrofit
+    // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
 
-    //Moshi
+    // Moshi
     implementation "com.squareup.moshi:moshi:1.11.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
 

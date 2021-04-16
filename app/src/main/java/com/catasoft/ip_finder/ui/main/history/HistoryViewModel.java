@@ -30,20 +30,9 @@ public class HistoryViewModel extends AndroidViewModel {
         searchInfoRepository.insert(value);
     }
 
-    public void update(SearchInfo value) {
-        searchInfoRepository.update(value);
-    }
-
     public void delete(SearchInfo value) {
         searchInfoRepository.delete(value);
     }
 
-    public void deleteAll(List<SearchInfo> items){
-        searchInfoRepository.deleteAll(items);
-    }
-
-    public LiveData<SearchInfo> getLiveSearchInfo(long searchId){ return searchInfoRepository.getLiveSearchInfo(searchId); }
-
     public LiveData<List<SearchInfo>> getAllLiveCurrentUserSearches(){ return searchInfoRepository.getAllLiveCurrentUserSearches(); }
-
 }
