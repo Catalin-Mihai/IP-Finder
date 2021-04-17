@@ -14,6 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="8dp"
         tools:context=".ui.searchinfo.SearchItemActivity">
 
         <LinearLayout
@@ -25,59 +26,265 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tvCountry"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.country}" />
+                android:layout_height="200dp"
+                app:cardElevation="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <TextView
-                android:id="@+id/tvRegionName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.regionName}" />
 
-            <TextView
-                android:id="@+id/tvCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.city}" />
 
-            <TextView
-                android:id="@+id/tvLat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(searchInfo.lat)}" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/secondary_blue">
 
-            <TextView
-                android:id="@+id/tvLon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(searchInfo.lon)}" />
+                    <!--                android:text="@{viewModel.liveCurrentUser.ip}"-->
 
-            <TextView
-                android:id="@+id/tvTimezone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.timezone}" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ipLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tvIsp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.isp}" />
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/primary_blue"
+                            android:fontFamily="@font/montserrat"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@{searchInfo.query}"
+                            android:textColor="@color/white"
+                            android:textSize="23sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvIp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{searchInfo.query}" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout"
+                        android:layout_width="56dp"
+                        android:layout_height="0dp"
+                        android:background="@color/secondary_blue"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ipLayout"
+
+
+                        >
+
+                        <ImageView
+                            android:id="@+id/imageView2"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.20999998"
+                            app:srcCompat="@drawable/outline_place_24"
+                            app:tint="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                            app:layout_constraintVertical_bias="0.72"
+                            app:srcCompat="@drawable/ic_time_zone"
+                            app:tint="@color/white" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutNumeIp"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:padding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
+                        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+                        app:layout_constraintTop_toBottomOf="@id/ipLayout">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutZoneInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0">
+
+                            <TextView
+                                android:id="@+id/tvCountry"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat"
+                                android:textColor="@color/white"
+                                android:text="@{searchInfo.country}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvRegionName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="@font/montserrat"
+                                android:textColor="@color/white"
+                                android:text="@{searchInfo.regionName}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvCountry" />
+
+                            <TextView
+                                android:id="@+id/tvCity"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="@font/montserrat"
+                                android:textColor="@color/white"
+                                android:text="@{searchInfo.city}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvRegionName" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:id="@+id/tvTimezone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat"
+                            android:textColor="@color/white"
+                            android:text="@{searchInfo.timezone}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/layoutZoneInfo"
+                            app:layout_constraintVertical_bias="0.65" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
+                        android:layout_width="56dp"
+                        android:layout_height="0dp"
+                        android:background="@color/secondary_blue"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/layoutNumeIp2"
+                        app:layout_constraintStart_toEndOf="@+id/layoutNumeIp"
+                        app:layout_constraintTop_toBottomOf="@id/ipLayout">
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+                            app:layout_constraintVertical_bias="0.72"
+                            app:srcCompat="@drawable/ic_internet_provider"
+                            app:tint="@color/white" />
+
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.20"
+                            app:srcCompat="@drawable/outline_gps_fixed_24"
+                            app:tint="@color/white" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutNumeIp2"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:padding="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
+                        app:layout_constraintTop_toBottomOf="@id/ipLayout">
+
+                        <TextView
+                            android:id="@+id/tvLat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat"
+                            android:textColor="@color/white"
+                            android:text="@{String.valueOf(searchInfo.lat)}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.08" />
+
+
+                        <TextView
+                            android:id="@+id/tvIsp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat"
+                            android:textColor="@color/white"
+                            android:text="@{searchInfo.isp}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvLon"
+                            app:layout_constraintVertical_bias="0.77" />
+
+
+                        <TextView
+                            android:id="@+id/tvLon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:fontFamily="@font/montserrat"
+                            android:textColor="@color/white"
+                            android:text="@{String.valueOf(searchInfo.lon)}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvLat" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!--                android:text="@{viewModel.liveCurrentUser.username}"-->
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/infoMap"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
                 tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
         </LinearLayout>
 
