@@ -4,142 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-            <import type="com.catasoft.ip_finder.data.entities.SearchInfo"/>
-            <variable
-                name="previousInfo"
-                type="SearchInfo" />
-            <variable
-                name="currentInfo"
-                type="SearchInfo" />
+        <import type="com.catasoft.ip_finder.data.entities.SearchInfo"/>
+        <variable
+            name="previousInfo"
+            type="SearchInfo" />
+        <variable
+            name="currentInfo"
+            type="SearchInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.changed.IpChangedActivity">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvPreviousInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Informatii anterioare"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:textSize="26sp"
+                android:text="Informatii anterioare"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <include
+                    android:id="@+id/prevSearchInfoLayout"
+                    layout="@layout/ip_info_layout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:searchInfo="@{previousInfo}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/tvPreviousCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{previousInfo.country}" />
+                android:fontFamily="@font/montserrat"
+                android:gravity="center"
+                android:textSize="26sp"
+                android:text="Informatii curente"/>
 
-            <TextView
-                android:id="@+id/tvPreviousRegionName"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{previousInfo.regionName}" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tvPreviousCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{previousInfo.city}" />
+                <include
+                    android:id="@+id/currentSearchInfoLayout"
+                    layout="@layout/ip_info_layout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:searchInfo="@{currentInfo}" />
 
-            <TextView
-                android:id="@+id/tvPreviousLat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(previousInfo.lat)}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tvPreviousLon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(previousInfo.lon)}" />
-
-            <TextView
-                android:id="@+id/tvTimezone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{previousInfo.timezone}" />
-
-            <TextView
-                android:id="@+id/tvPreviousIsp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{previousInfo.isp}" />
-
-            <TextView
-                android:id="@+id/tvPreviousIp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{previousInfo.query}" />
-
-            <TextView
-                android:id="@+id/tvCurrentInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Informatii curente"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvCurrentCountry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.country}" />
-
-            <TextView
-                android:id="@+id/tvCurrentRegionName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.regionName}" />
-
-            <TextView
-                android:id="@+id/tvCurrentCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.city}" />
-
-            <TextView
-                android:id="@+id/tvCurrentLat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(currentInfo.lat)}" />
-
-            <TextView
-                android:id="@+id/tvCurrentLon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(currentInfo.lon)}" />
-
-            <TextView
-                android:id="@+id/tvCurrentTimezone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.timezone}" />
-
-            <TextView
-                android:id="@+id/tvCurrentIsp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.isp}" />
-
-            <TextView
-                android:id="@+id/tvCurrentIp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{currentInfo.query}" />
         </LinearLayout>
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
