@@ -158,7 +158,7 @@ public class AuthActivity extends AppCompatActivity {
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("[google-sign-in]", "signInResult:failed code=" + e.getStatusCode());
+            Log.e("[google-sign-in]", "signInResult:failed code=" + e.getStatusCode());
             handleRegisterOrLogin(null);
         }
     }
@@ -169,7 +169,7 @@ public class AuthActivity extends AppCompatActivity {
             return;
         }
 
-        authViewModel.googleLogin(new UserAccount(account.getDisplayName(),null,null, null,
+        authViewModel.googleLogin(new UserAccount(account.getDisplayName(),"null",null, null,
                         1, false), new AuthActivityCallback(){
             @Override
             public void goToMainActivity(boolean isLocalLogin, long userId) {

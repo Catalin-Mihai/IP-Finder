@@ -102,6 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:hint="IP"
                     android:inputType="textPersonName"
                     android:text="@={viewModel.liveIp}"
                     app:layout_constraintEnd_toStartOf="@+id/btnSearch"
