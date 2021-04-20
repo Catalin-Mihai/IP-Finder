@@ -33,4 +33,8 @@ public interface UserAccountDao {
     @Query("SELECT EXISTS(SELECT * FROM " + RoomConfig.USER_INFO_TABLE +
             " WHERE username = :username AND password = :password AND localLogin = :localLogin)")
     boolean checkUserAccount(String username, String password, boolean localLogin);
+
+    @Query("SELECT * FROM " + RoomConfig.USER_INFO_TABLE +
+            " WHERE username = :username")
+    UserAccount getUserAccount(String username);
 }
